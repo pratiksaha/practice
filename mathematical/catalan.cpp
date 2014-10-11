@@ -1,4 +1,4 @@
-// Program to calculate catalan no
+// Program to calculate the nth catalan no
 #include<iostream>
 using namespace std;
  
