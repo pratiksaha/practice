@@ -1,3 +1,4 @@
+//Program to find the max area under a histogram
 #include<iostream>
 #include<stack>
 using namespace std;
