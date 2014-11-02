@@ -1,4 +1,4 @@
-//Fil a matrix with alternatins O's and X's
+//Fil a matrix with alternating O's and X's
 #include <iostream>
 using namespace std;
 
