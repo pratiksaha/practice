@@ -1,5 +1,5 @@
 //Find if there is a subarray with 0 sum
-//Using features of C++ Standard (2001) Compile using g++ -std=c++11
+//Using features of C++ Standard (2011) Compile using g++ -std=c++11
 #include<iostream>
 #include<climits>
 #include<algorithm>

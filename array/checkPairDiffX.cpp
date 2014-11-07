@@ -1,5 +1,5 @@
 //given A[] of N nos and another no S, determines whether or not there exist two elements in A whose diff is exactly S
-//Using features of C++ Standard (2001) Compile using g++ -std=c++11
+//Using features of C++ Standard (2011) Compile using g++ -std=c++11
 #include<iostream>
 #include<algorithm>
 #include<unordered_map>
