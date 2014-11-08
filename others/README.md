@@ -1,1 +1,1 @@
-Implementation of other problems using backtracking, branch and bound, etc
+Implementation of problems using greedy technique, backtracking, branch and bound, etc
