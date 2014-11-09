@@ -72,38 +72,11 @@ void push_front(struct node **head, int key) {
     *head = temp;
 }
 
-void push_back(struct node **head_ref, int key) {
-struct node* new_node = (struct node*) malloc(sizeof(struct node));
- 
-    struct node *last = *head_ref;  /* used in step 5*/
-  
-    /* 2. put in the data  */
-    new_node->data  = key;
- 
-    /* 3. This new node is going to be the last node, so make next of it as NULL*/
-    new_node->next = NULL;
- 
-    /* 4. If the Linked List is empty, then make the new node as head */
-    if (*head_ref == NULL)
-    {
-       *head_ref = new_node;
-       return;
-    } 
-      
-    /* 5. Else traverse till the last node */
-    while (last->next != NULL)
-        last = last->next;
-  
-    /* 6. Change the next of last node */
-    last->next = new_node;
-    return;
-    /*
+void push_back(struct node **head, int key) {
     struct node *temp = getNode();
     temp->data = key;
     temp->next = NULL;
-    cout<<"here\n";
-    if (*head == NULL) {
-        cout<<"NULL"<<endl;        
+    if (*head == NULL) {       
         *head = temp;
     } else {
         struct node *last = *head;
@@ -111,7 +84,6 @@ struct node* new_node = (struct node*) malloc(sizeof(struct node));
             last = last->next;
         last->next = temp;
     }
-    */
 }
 
 void push_at(struct node **head, int pos, int key) {
@@ -195,7 +167,7 @@ int getNthNodeFromBeg(struct node* head, int pos) {
     int len = getSize(head);
     if (pos > len) {
         cout<<"Given position "<<pos<<" is beyond the linked list of size "<<len<<endl;
-        return 0;
+        return NULL;
     } else {
         struct node* temp = head;
         int count = 0;
@@ -211,7 +183,7 @@ int getNthNodeFromEnd(struct node* head, int pos) {
     int len = getSize(head);
     if (pos > len) {
         cout<<"Given position "<<pos<<" is beyond the linked list of size "<<len<<endl;
-        return 0;
+        return NULL;
     } else {
         struct node* temp = head;
         int count = 0;
