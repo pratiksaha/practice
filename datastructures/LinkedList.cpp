@@ -8,7 +8,7 @@ struct node {
     struct node *next;
 };
 
-struct node* getNode() {
+struct node* getNode() { //alocate memory
     struct node *temp = (struct node *)malloc(sizeof(struct node));
     if (temp == NULL) {
         cout<<"Memory Full"<<endl;
@@ -16,7 +16,7 @@ struct node* getNode() {
     return temp;
 }
 
-void printList(struct node *head) {
+void printList(struct node *head) { //print the list
     cout<<"Linked List :";
     while(head != NULL) {
         cout<<" "<<head->data;
@@ -25,14 +25,14 @@ void printList(struct node *head) {
     cout<<endl;
 }
 
-void printListReverse(struct node* head) {
+void printListReverse(struct node* head) { //print list in reverse
     if(head == NULL)
         return;
     printListReverse(head->next);
     cout<<" "<<head->data;
 }
 
-void getMiddle(struct node *head) {
+void getMiddle(struct node *head) { //get the middle of the list
     struct node *slow_ptr = head;
     struct node *fast_ptr = head;
     if(head != NULL) {
@@ -44,7 +44,7 @@ void getMiddle(struct node *head) {
     }
 }
 
-int getCount(struct node *head, int key) {
+int getCount(struct node *head, int key) { //No of occurences of the given key in the list
     struct node *temp = head;
     int count = 0;
     while(temp != NULL) {
@@ -55,7 +55,7 @@ int getCount(struct node *head, int key) {
     return count;
 }
 
-int getSize(struct node *head) {
+int getSize(struct node *head) { //No of nodes in the list
     struct node *temp = head;
     int count = 0;
     while(temp != NULL) {
@@ -65,14 +65,14 @@ int getSize(struct node *head) {
     return count;
 }
 
-void push_front(struct node **head, int key) {
+void push_front(struct node **head, int key) { //add node in the front
     struct node* temp = getNode();
     temp->data = key;
     temp->next = *head;
     *head = temp;
 }
 
-void push_back(struct node **head, int key) {
+void push_back(struct node **head, int key) { //add node at the back
     struct node *temp = getNode();
     temp->data = key;
     temp->next = NULL;
@@ -86,7 +86,7 @@ void push_back(struct node **head, int key) {
     }
 }
 
-void push_at(struct node **head, int pos, int key) {
+void push_at(struct node **head, int pos, int key) { //add node at the given pos
     int len = getSize(*head);
     if(pos > len+1) {
         cout<<"There are less than "<<pos<<" elements in the list"<<endl;
@@ -106,7 +106,7 @@ void push_at(struct node **head, int pos, int key) {
     }
 }
 
-void pop_front(struct node **head) {
+void pop_front(struct node **head) { //remove node from the front
     if(*head == NULL){
         cout<<"List is empty"<<endl;
     } else {
@@ -121,7 +121,7 @@ void pop_front(struct node **head) {
     }
 }
 
-void pop_back(struct node **head) {
+void pop_back(struct node **head) { //remove node from the back
     if(*head == NULL) {
         cout<<"List is empty"<<endl;
     } else {
@@ -141,7 +141,7 @@ void pop_back(struct node **head) {
     }
 }
 
-void pop_at(struct node **head, int pos) {
+void pop_at(struct node **head, int pos) { //remove node from the given pos
     if(*head == NULL) {
         cout<<"List is empty"<<endl;
     } else {
@@ -163,7 +163,7 @@ void pop_at(struct node **head, int pos) {
     }
 }
 
-int getNthNodeFromBeg(struct node* head, int pos) {
+int getNthNodeFromBeg(struct node* head, int pos) { //get pos'th node from the beginning
     int len = getSize(head);
     if (pos > len) {
         cout<<"Given position "<<pos<<" is beyond the linked list of size "<<len<<endl;
@@ -179,7 +179,7 @@ int getNthNodeFromBeg(struct node* head, int pos) {
     }
 }
 
-int getNthNodeFromEnd(struct node* head, int pos) {
+int getNthNodeFromEnd(struct node* head, int pos) { //get pos'th node from the end
     int len = getSize(head);
     if (pos > len) {
         cout<<"Given position "<<pos<<" is beyond the linked list of size "<<len<<endl;
@@ -195,7 +195,7 @@ int getNthNodeFromEnd(struct node* head, int pos) {
     }
 }
 
-void reverse(struct node **head) {
+void reverse(struct node **head) { //reverse a list
     struct node* prev = NULL;
     struct node* curr = *head;
     struct node* next;
@@ -208,7 +208,7 @@ void reverse(struct node **head) {
     *head = prev;
 }
 
-void rotateCounterClockwise(struct node **head, int k) {
+void rotateCounterClockwise(struct node **head, int k) { //rotate a list k times in Counter Clockwise direction
     if (k == 0 || k>getSize(*head))
         return;
 
@@ -231,7 +231,7 @@ void rotateCounterClockwise(struct node **head, int k) {
     kthNode->next = NULL;
 }
 
-void rotateClockwise(struct node **head, int k) {
+void rotateClockwise(struct node **head, int k) { //rotate a list k times in Clockwise direction
     int len = getSize(*head);
     if (k == 0 || k>getSize(*head))
         return;
@@ -239,7 +239,7 @@ void rotateClockwise(struct node **head, int k) {
 }
 
 
-void deleteList(struct node **head) {
+void deleteList(struct node **head) { //free all space used by the list
     struct node* curr = *head;
     struct node* next;
     while (curr != NULL) {
