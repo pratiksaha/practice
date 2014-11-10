@@ -11,7 +11,7 @@ struct node {
     struct node *right;
 };
 
-struct node * getNode(int key) {
+struct node * getNode(int key) { //allocate memory and initialize
     struct node * temp = (struct node *)malloc(sizeof(struct node));
     if(temp == NULL) {
         cout<<"Memory full\n";
