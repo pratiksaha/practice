@@ -439,6 +439,50 @@ void printTopView(struct node *node) {
     cout<<endl;
 }
 
+bool printAncestors(struct node *node, struct node *key) {
+    if(node) {
+        if (node == key) {
+            return true;
+        }else if(printAncestors(node->left, key) || printAncestors(node->right, key)) {
+            cout<<" "<<node->data;
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+void printAncestorsItr(struct node *node, struct node *key) {
+    cout<<"Ancestors of "<<key->data<<" :";
+    if(node) {
+        stack<struct node *> s;
+        while (1) { //traverse the complete tree in postorder way till we find the key
+            while(node && node->data != key->data) { //while traversing the left side push into stack to traverse right sub tree later
+                s.push(node);
+                node = node->left;
+            }
+            if(node && node->data == key->data) //break if the node whose ancestors are to be printed is found
+                break;
+            if (s.top()->right == NULL) { //check if right sub-tree exists for the node at top
+                node = s.top();
+                s.pop();
+                while (!s.empty() && s.top()->right == node) { //if the popped node is right child of top, then remove the top
+                    node = s.top();
+                    s.pop();
+                }
+            }
+            node = s.empty()? NULL: s.top()->right; //start traversing right sub tree if stack is not empty
+        }
+        while(!s.empty()) { //print the stack which contains the ancestors
+            cout<<" "<<s.top()->data;
+            s.pop();
+        }
+    }
+    cout<<endl;
+}
+
 int main() {
     struct node *t = NULL;
     createTree(&t);
@@ -466,6 +510,8 @@ int main() {
     cout<<"Right View :", printRightView(t, 0, &tmp), cout<<endl;
     printTopView(t);
     printVerticalOrderSum(t);
+    cout<<"Print ancestors :", printAncestors(t, t->left->right), cout<<endl;
+    printAncestorsItr(t, t->left->right);
     deleteTree(&t);
     levelOrder(t);
     return 0;   
