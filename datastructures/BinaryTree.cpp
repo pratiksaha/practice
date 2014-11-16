@@ -359,6 +359,29 @@ void printVerticalOrderHash(struct node *node) { //print vertical order of a tre
     }
 }
 
+void printVerticalOrderSum(struct node *node) { //print vertical order sums of a tree
+    unordered_map<int, vector<int>> hash;
+    int hd = 0;
+    cout<<"Vertical Order Sums :\n";
+    getVerticalOrderHash(node, hd, &hash);
+    int i, n;
+    n = hash.size();
+    int arr[n];
+    i = 0;
+    for(unordered_map<int,vector<int>>:: iterator it=hash.begin(); it!=hash.end(); it++) {
+        arr[i] = it->first;
+        i++;
+    }
+    sort(arr, arr+n);
+    for(i=0; i<n; i++) {
+        int sum = 0;
+        for (vector<int>::iterator it=hash[arr[i]].begin(); it!=hash[arr[i]].end(); it++)
+            sum += *it;
+        cout<<" "<<sum;
+    }
+    cout<<endl;
+}
+
 void printLeftView(struct node *node, int lvl, int *max_so_far) {
     if(node) {
         if (*max_so_far<lvl) {
@@ -442,6 +465,7 @@ int main() {
     tmp = 0;
     cout<<"Right View :", printRightView(t, 0, &tmp), cout<<endl;
     printTopView(t);
+    printVerticalOrderSum(t);
     deleteTree(&t);
     levelOrder(t);
     return 0;   
