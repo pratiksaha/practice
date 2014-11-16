@@ -4,6 +4,8 @@
 #include<cstdlib>
 #include<stack>
 #include<queue>
+#include<vector>
+#include<unordered_set>
 #include<unordered_map>
 #include<algorithm>
 using namespace std;
@@ -357,6 +359,63 @@ void printVerticalOrderHash(struct node *node) { //print vertical order of a tre
     }
 }
 
+void printLeftView(struct node *node, int lvl, int *max_so_far) {
+    if(node) {
+        if (*max_so_far<lvl) {
+            cout<<" "<<node->data;
+            *max_so_far = lvl;
+        }
+        printLeftView(node->left, lvl+1, max_so_far);
+        printLeftView(node->right, lvl+1, max_so_far);
+    }
+}
+
+void printRightView(struct node *node, int lvl, int *max_so_far) {
+    if(node) {
+        if (*max_so_far<lvl) {
+            cout<<" "<<node->data;
+            *max_so_far = lvl;
+        }
+        printRightView(node->right, lvl+1, max_so_far);
+        printRightView(node->left, lvl+1, max_so_far);
+    }
+}
+
+void printTopView(struct node *node) {
+    cout<<"Top View : ";
+    if(node) {
+        struct nodeItem{
+            struct node* key;
+            int hd;
+        };
+        queue<struct nodeItem> q;
+        unordered_set<int> s;
+        struct nodeItem curr;
+        curr.key = node;
+        curr.hd = 0;
+        q.push(curr);
+        while(!q.empty()) {
+            struct nodeItem temp = q.front();
+            q.pop();
+            if(s.find(temp.hd) == s.end()) {
+                s.insert(temp.hd);
+                cout<<" "<<temp.key->data;
+            }
+            if(temp.key->left) {
+                curr.key = temp.key->left;
+                curr.hd = temp.hd - 1;
+                q.push(curr);
+            }
+            if(temp.key->right) {
+                curr.key = temp.key->right;
+                curr.hd = temp.hd + 1;
+                q.push(curr);
+            }
+        }
+    }
+    cout<<endl;
+}
+
 int main() {
     struct node *t = NULL;
     createTree(&t);
@@ -378,6 +437,11 @@ int main() {
     cout<<"Checking balance of the tree as per RBT : "<<isBalancedRBT(t, &m, &n)<<endl;
     printVerticalOrder(t);
     printVerticalOrderHash(t);
+    int tmp = 0;
+    cout<<"Left View :", printLeftView(t, 0, &tmp), cout<<endl;
+    tmp = 0;
+    cout<<"Right View :", printRightView(t, 0, &tmp), cout<<endl;
+    printTopView(t);
     deleteTree(&t);
     levelOrder(t);
     return 0;   
