@@ -483,6 +483,168 @@ void printAncestorsItr(struct node *node, struct node *key) {
     cout<<endl;
 }
 
+int getLevel(struct node *node, struct node *key, int lvl=1) { //returns level of key if present else returns 0
+    if(node == NULL)
+        return 0;
+    if(node == key)
+        return lvl;
+    int level = getLevel(node->left, key, lvl+1);
+    if(level != 0) //return level only if key is found
+        return level;
+    level = getLevel(node->right, key, lvl+1); //return level no matter what
+    return level;
+}
+
+bool isSibling(struct node *node, struct node *key1, struct node *key2) {//check if key1 and key2 are siblings
+    if(node==NULL)
+        return false;
+    return((node->left == key1 && node->right==key2)||(node->left == key2 && node->right == key1)||isSibling(node->left, key1, key2)||isSibling(node->right, key1, key2));
+}
+
+bool isCousin(struct node *node, struct node *key1, struct node *key2) {//check if key1 and key2 are cousins
+    if((getLevel(node, key1) == getLevel(node, key2)) && !(isSibling(node, key1, key2)))
+        return true;
+    else
+        return false;
+}
+
+bool checkAllLeavesSameLevel(struct node *node, int *leaflvl, int lvl=0) {//check if all leaves are at the same level
+    if(node==NULL) {
+        return true;
+    } else if(node->left == NULL && node->right == NULL) {
+        if (*leaflvl == 0) {//set first found leaf's level
+            *leaflvl = lvl;
+            return true;
+        } else {
+            return (lvl == *leaflvl);
+        }
+    } else { //recur
+        return (checkAllLeavesSameLevel(node->left, leaflvl, lvl+1)&&checkAllLeavesSameLevel(node->right, leaflvl, lvl+1));
+    }
+}
+
+int getMaxWidth(struct node *node) { //max width of a tree
+    if(node == NULL) {
+        return 0;
+    } else {
+        queue<struct node *> q;
+        q.push(node);
+        int max_width = 1;
+        while(1) { //this loop will run a max time of node count in tree
+            int width = q.size();
+            if(width == 0)
+                return max_width;
+            if(width > max_width)
+                max_width = width;
+            while (width > 0) {
+                struct node *node = q.front();
+                q.pop();
+                if (node->left != NULL)
+                    q.push(node->left);
+                if (node->right != NULL)
+                    q.push(node->right);
+                width--;
+            }
+        }
+    }
+}
+
+int getDiameter(struct node *node){ //get diameter of a tree
+    if(node) {
+        int lheight = getHeight(node->left);
+        int rheight = getHeight(node->right);
+        int ldiameter = getDiameter(node->left);
+        int rdiameter = getDiameter(node->right);
+        return max(lheight+rheight+1, max(ldiameter, rdiameter));
+    } else {
+        return 0;
+    }
+}
+
+bool checkNode(struct node *node, struct node *key) { //check if key belongs to a tree
+    if(node) {
+        if(node == key || checkNode(node->left, key) || checkNode(node->right, key))
+            return true;
+        else
+            return false;
+    } else {
+        return false;
+    }
+}
+
+struct node *getLCARecr(struct node *node, struct node *key1, struct node *key2, bool *found1, bool *found2) { //recr util to find LCA
+    if (node) { //if either key1 or key2 matches with root, report the presence and return root
+        if (node == key1) {
+            *found1 = true;
+            return node;
+        }
+        else if (node == key2) {
+            *found2 = true;
+            return node;
+        } else { //look for keys in left and right subtrees
+            struct node *left_lca = getLCARecr(node->left, key1, key2, found1, found2);
+            struct node *right_lca = getLCARecr(node->right, key1, key2, found1, found2);
+            if(left_lca&&right_lca) //if both of the above calls return non NULL, this node is the LCA
+                return node;
+            else
+                return (left_lca != NULL)? left_lca: right_lca;
+        }
+    } else {
+        return NULL;
+    }
+}
+
+struct node *getLCA(struct node *node, struct node *key1, struct node *key2) { //find least common ancestor of key1 and key2
+    bool k1 = false;
+    bool k2 = false;
+    struct node *lca = getLCARecr(node, key1, key2, &k1, &k2);
+    if(k1 && k2 || k1 && checkNode(lca, key2) || k2 && checkNode(lca, key1)) //return LCA only if both key1 and key2 are present in tree
+        return lca;
+    else
+        return NULL;
+}
+
+struct node *getDistRecr(struct node *node, struct node *key1, struct node *key2, int *d1, int *d2, int *dist, int lvl) { //util to find dist
+    if (node) { //if either key1 or key2 matches with root, report the presence and return root
+        if (node == key1) {
+            *d1 = lvl;
+            return node;
+        }
+        else if (node == key2) {
+            *d2 = lvl;
+            return node;
+        } else { //look for keys in left and right subtrees
+            struct node *left_lca = getDistRecr(node->left, key1, key2, d1, d2, dist, lvl+1);
+            struct node *right_lca = getDistRecr(node->right, key1, key2, d1, d2, dist, lvl+1);
+            if(left_lca&&right_lca) { //if both of the above calls return non NULL, this node is the LCA
+                *dist = (*d1) + (*d2) - 2*lvl;
+                return node;
+            } else {
+                return (left_lca != NULL)? left_lca: right_lca;
+            }
+        }
+    } else {
+        return NULL;
+    }
+}
+
+int getDistance(struct node *node, struct node *key1, struct node *key2) { //find distance between key1 and key2
+    int d1 = -1;
+    int d2 = -1;
+    int dist;
+    struct node *lca = getDistRecr(node, key1, key2, &d1, &d2, &dist, 1);
+    if (d1 != -1 && d2 != -1)  //return dist if both key1 and key2 are present in tree
+        return dist;
+    else if (d1 != -1) //if key1 is ancestor of key2, consider key1 as root and find level of key2 in subtree rooted with key1
+        dist = getLevel(lca, key2, 0);
+    else if (d2 != -1) //if key2 is ancestor of key1, consider key2 as root and find level of key1 in subtree rooted with key2
+        dist = getLevel(lca, key1, 0);
+    else //else return -1
+        dist = -1;
+    return dist;
+}
+
+
 int main() {
     struct node *t = NULL;
     createTree(&t);
@@ -512,6 +674,37 @@ int main() {
     printVerticalOrderSum(t);
     cout<<"Print ancestors :", printAncestors(t, t->left->right), cout<<endl;
     printAncestorsItr(t, t->left->right);
+    cout<<"Level : "<<getLevel(t, t->left->right)<<endl;
+    cout<<"Level : "<<getLevel(t, t->left->right->left)<<endl;
+    cout<<"Check Sibling : "<<isSibling(t, t->left, t->right)<<endl;
+    cout<<"Check Sibling : "<<isSibling(t, t->left, t->right->right)<<endl;
+    cout<<"Check Cousin : "<<isCousin(t, t->left, t->right)<<endl;
+    cout<<"Check Cousin : "<<isCousin(t, t->left->right, t->right->right)<<endl;
+    int temp = 0;
+    cout<<"Check all leaves same level : "<<checkAllLeavesSameLevel(t, &temp)<<endl;
+    cout<<"Max Width : "<<getMaxWidth(t)<<endl;
+    cout<<"Diameter : "<<getDiameter(t)<<endl;
+    cout<<"Checking node : "<<checkNode(t, t->left)<<endl;
+    cout<<"Checking node : "<<checkNode(t, t->left->left->left)<<endl;
+    struct node *res;
+    res = getLCA(t, t->left->left, t->right);
+    if(res)
+        cout<<"LCA : "<<res->data<<endl;
+    else
+        cout<<"LCA does not exist"<<endl;
+    res = getLCA(t, t->left->left, t->left->right);
+    if(res)
+        cout<<"LCA : "<<res->data<<endl;
+    else
+        cout<<"LCA does not exist"<<endl;
+    res = getLCA(t, t->left, t->right->left->left);
+    if(res)
+        cout<<"LCA : "<<res->data<<endl;
+    else
+        cout<<"LCA does not exist"<<endl;
+    cout<<"Distance : "<<getDistance(t, t->left->left, t->right)<<endl;
+    cout<<"Distance : "<<getDistance(t, t->left->left, t->left->right)<<endl;
+    cout<<"Distance : "<<getDistance(t, t->left, t->right->left->left)<<endl;
     deleteTree(&t);
     levelOrder(t);
     return 0;   
