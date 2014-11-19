@@ -2,13 +2,15 @@
 //Using features of C++ Standard (2011) Compile using g++ -std=c++11
 #include<iostream>
 #include<cstdlib>
+#include<climits>
+#include<cstring>
+#include<cmath>
 #include<stack>
 #include<queue>
 #include<vector>
 #include<unordered_set>
 #include<unordered_map>
 #include<algorithm>
-#include<climits>
 using namespace std;
 
 struct node {
@@ -793,6 +795,124 @@ int getLevelDiff(struct node *node) { //difference between odd and even level no
         return 0;
 }
 
+void printKDistantRoot(struct node *node, int k) { //print all nodes that are k distant from node
+    if(node) {
+        if(k==0) { //print if required level
+            cout<<" "<<node->data;
+        } else { //else recur
+            printKDistantRoot(node->left, k-1);
+            printKDistantRoot(node->right, k-1);
+        }
+    }
+}
+
+void kDistantLeaf(struct node *node, int path[], bool visited[], int pathLen, int k) { //get all nodes that are k distant from a leaf node
+    if(node) {
+        path[pathLen] = node->data;
+        visited[pathLen] = false;
+        pathLen++;
+        if (node->left == NULL && node->right == NULL && pathLen-k-1 >= 0 && visited[pathLen-k-1] == false) {
+            cout<<" "<<path[pathLen-k-1];
+            visited[pathLen-k-1] = true;
+        }else {
+            kDistantLeaf(node->left, path, visited, pathLen, k);
+            kDistantLeaf(node->right, path, visited, pathLen, k);
+        }
+    }
+}
+
+void printKDistantLeaf(struct node *node, int k) {//print all nodes that are k distant from a leaf node
+    cout<<"All nodes that are "<<k<<" distant from a leaf node :";
+    int h = getHeight(node);
+    int path[h];
+    bool visited[h];
+    memset(visited, false, h);
+    kDistantLeaf(node, path, visited, 0, k);
+    cout<<endl;
+}
+
+int printKDistantNode(struct node* node, struct node* target, int k) {//print all nodes that are k distant from target
+    if(node){
+        if(node == target) {
+            printKDistantRoot(node, k);
+            return 0;
+        }
+        int dl = printKDistantNode(node->left, target, k);
+        if (dl != -1) {
+            if (dl + 1 == k) //if root is at distance k from target, print root
+                cout<<" "<<node->data;
+            else //else go to right subtree and print all k-dl-2 distant nodes
+                printKDistantRoot(node->right, k-dl-2);
+            return 1 + dl;
+        }
+        int dr = printKDistantNode(node->right, target, k);
+        if (dr != -1) {
+            if (dr + 1 == k) //if root is at distance k from target, print root
+                cout<<" "<<node->data;
+            else //else go to left subtree and print all k-dr-2 distant nodes
+                printKDistantRoot(node->left, k-dr-2);
+             return 1 + dr;
+        }
+        return -1; //target was neither present in left nor in right subtree
+    } else {
+        return -1;
+    }
+}
+
+void printBetweenLevels(struct node* node, int low, int high) {
+    cout<<"Nodes in levels ["<<low<<","<<high<<"] :";
+    queue <struct node *> q;
+    struct node *marker = getNode(0);
+    int level = 1;
+    q.push(node);
+    q.push(marker);
+    while(!q.empty()) { //level order traversal
+        struct node *temp = q.front();
+        q.pop();
+        if (temp == marker) {
+            level++;
+            if(q.empty()||level>high)
+                break;
+            q.push(marker);
+            continue;
+        }
+        if(level>=low)
+            cout<<" "<<temp->data;
+        if(temp->left)
+            q.push(temp->left);
+        if(temp->right)
+            q.push(temp->right);
+    }
+    free(marker);
+    cout<<endl;
+}
+
+void printArray(int path[], int len) { //print path array
+    for(int i=0; i<len; i++)
+        cout<<" "<<path[i];
+    cout<<endl;
+}
+
+void printPaths(struct node* node, int path[], int pathLen) {
+    if(node) { //add to path
+        path[pathLen] = node->data;
+        pathLen++;
+        if (node->left==NULL && node->right==NULL) { //print if leaf
+            printArray(path, pathLen);
+        } else { //recur
+            printPaths(node->left, path, pathLen);
+            printPaths(node->right, path, pathLen);
+        }
+    }
+}
+
+void printAllRootLeafPaths(struct node* node) { //print all root to leaf paths in tree
+    int n = getHeight(node);
+    int path[n];
+    cout<<"All Root to Leaf paths are :\n";
+    printPaths(node, path, 0);
+}
+
 int main() {
     struct node *t = NULL;
     createTree(&t);
@@ -881,6 +1001,16 @@ int main() {
     cout<<"Tree "<<((checkPathSum(t,9))?"does":"does not")<<" have root to leaf path of sum 9\n";
     cout<<"Sum of all paths : "<<getTreePathsSum(t)<<endl;
     cout<<"Difference between sums of odd and even levels : "<<getLevelDiff(t)<<endl;
+    cout<<"All nodes that are 1 distant from node :",printKDistantRoot(t,1),cout<<endl;
+    cout<<"All nodes that are 2 distant from node :",printKDistantRoot(t,2),cout<<endl;
+    printKDistantLeaf(t, 1);
+    printKDistantLeaf(t, 2);
+    cout<<"All nodes that are 1 distant from target",printKDistantNode(t, t->left, 1),cout<<endl;
+    cout<<"All nodes that are 2 distant from target",printKDistantNode(t, t->left, 2),cout<<endl;
+    cout<<"All nodes that are 3 distant from target",printKDistantNode(t, t->left, 3),cout<<endl;
+    printBetweenLevels(t, 2, 2);
+    printBetweenLevels(t, 1, 3);
+    printAllRootLeafPaths(t);
     deleteTree(&t);
     levelOrder(t);
     return 0;   
