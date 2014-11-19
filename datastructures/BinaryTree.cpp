@@ -859,7 +859,7 @@ int printKDistantNode(struct node* node, struct node* target, int k) {//print al
     }
 }
 
-void printBetweenLevels(struct node* node, int low, int high) {
+void printBetweenLevels(struct node* node, int low, int high) { //print nodes in level [low,high]
     cout<<"Nodes in levels ["<<low<<","<<high<<"] :";
     queue <struct node *> q;
     struct node *marker = getNode(0);
