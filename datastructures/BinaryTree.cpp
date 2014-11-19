@@ -8,6 +8,7 @@
 #include<unordered_set>
 #include<unordered_map>
 #include<algorithm>
+#include<climits>
 using namespace std;
 
 struct node {
@@ -644,6 +645,153 @@ int getDistance(struct node *node, struct node *key1, struct node *key2) { //fin
     return dist;
 }
 
+int depthOfOddLeaf(struct node *node, int level=0) { //get depth of the deepest odd level leaf
+    if(node) {
+        if(node->left==NULL && node->right==NULL && level&1) //return level if node is leaf with odd level
+            return level;
+         else //else max from left and right subtree
+            return max(depthOfOddLeaf(node->left, level+1),depthOfOddLeaf(node->right, level+1));
+    } else {
+        return 0;
+    }
+}
+
+int depthDeepestLeftLeafNode(struct node *node, int level=0, bool left=false){ //get depth of deepest leaf node
+    if(node) {
+        if(left && node->left==NULL && node->right==NULL)
+            return level;
+        else
+            return max(depthDeepestLeftLeafNode(node->left, level+1, true),depthDeepestLeftLeafNode(node->right, level+1, false));
+    } else {
+        return 0;
+    }
+}
+
+struct node* deepestLeftLeaf(struct node *node, int depth, int lvl=0, bool left=false){//get the left leaf node at level depth
+    if (node) {
+        if(left && lvl==depth && node->left==NULL && node->right==NULL)
+            return node;
+        struct node * temp;
+        temp = deepestLeftLeaf(node->left, depth, lvl+1, true);
+        if(temp)
+            return temp;
+        return deepestLeftLeaf(node->right, depth, lvl+1, false);
+    } else {
+        return NULL;
+    }
+}
+
+struct node* getNextRight(struct node *node, struct node *key) { //get the nest right node
+    if (node) {
+        queue<struct node *> qn; //store nodes
+        queue<int> ql; //store node levels
+        struct node *temp = node;
+        int level = 0;
+        qn.push(temp);
+        ql.push(level);
+        while(!qn.empty()) {//level order traversal
+            temp = qn.front();
+            level = ql.front();
+            qn.pop();
+            ql.pop();
+            if (temp == key) {
+                if (ql.empty()|| ql.front() != level) //return NULL if no more items in queue or this isthe rightmost node of its level
+                    return NULL;
+                else //else return next node
+                    return qn.front();
+            }
+            if (temp->left) {
+                qn.push(temp->left);
+                ql.push(level+1);
+            }
+            if (temp->right != NULL) {
+                qn.push(temp->right);
+                ql.push(level+1);
+            }
+        }
+        return NULL;
+    } else {
+        return NULL;
+    }
+}
+
+bool printPath(struct node *node, struct node *target) { //print path from node to target
+    if( node && (node==target||printPath(node->left, target)||printPath(node->right, target)) ) {
+        cout<<" "<<node->data;
+        return true;
+    }
+    return false;
+}
+
+void maxSumPathRootLeafTarget(struct node *node, int *max_sum, int curr_sum, struct node **target) {
+    if (node) {
+        curr_sum = curr_sum + node->data;
+        if (node->left == NULL && node->right == NULL) { //if this is a leaf node and ,
+            if (curr_sum > *max_sum) { //if path to this node has max sum so far
+                *max_sum = curr_sum;
+                *target = node;
+            }
+        } else { //recur
+            maxSumPathRootLeafTarget(node->left, max_sum, curr_sum, target);
+            maxSumPathRootLeafTarget(node->right, max_sum, curr_sum, target);
+        }
+    }
+}
+
+void maxSumPathRootLeaf(struct node *node) {
+    cout<<"Max Sum Path :";
+    if(node) {
+        struct node *target;
+        int max_sum = INT_MIN;
+        maxSumPathRootLeafTarget(node, &max_sum, 0, &target); //find target
+        printPath(node, target); //print path
+    }
+    cout<<endl;
+}
+
+int maxSumPathLeaves(struct node *node, int *res) { //find the max sum between any two leaves
+    if(node){
+        int lSum = maxSumPathLeaves(node->left, res);
+        int rSum = maxSumPathLeaves(node->right, res);
+        int curr_sum = max((lSum+rSum+node->data), max(lSum, rSum));
+        if(*res < curr_sum)
+            *res = curr_sum;
+        return max(lSum, rSum)+node->data;
+    } else {
+        return 0;
+    }
+}
+
+bool checkPathSum(struct node* node, int sum){ //check if root to leaf path sum exists
+    if(node) {
+        int subSum = sum - node->data;
+        if((subSum == 0 && node->left == NULL && node->right == NULL)||(node->left && checkPathSum(node->left, subSum))||(node->right && checkPathSum(node->right, subSum)))
+            return true;
+         else
+            return false;
+    } else {//return true if we run out of tree and sum equals 0
+         return (sum == 0);
+    }
+}
+
+int getTreePathsSum(struct node *node, int val=0) { //get sum of all root to leaf paths
+    if(node){
+        val = val*10 + node->data;
+        if (node->left==NULL && node->right==NULL)
+            return val;
+        else
+            return getTreePathsSum(node->left, val) + getTreePathsSum(node->right, val);
+    } else {
+        return 0;
+    }
+}
+
+int getLevelDiff(struct node *node) { //difference between odd and even level nodes
+    if(node)
+        return node->data - getLevelDiff(node->left) - getLevelDiff(node->right);
+    else
+        return 0;
+}
 
 int main() {
     struct node *t = NULL;
@@ -705,6 +853,34 @@ int main() {
     cout<<"Distance : "<<getDistance(t, t->left->left, t->right)<<endl;
     cout<<"Distance : "<<getDistance(t, t->left->left, t->left->right)<<endl;
     cout<<"Distance : "<<getDistance(t, t->left, t->right->left->left)<<endl;
+    cout<<"Depth of the deepest odd level leaf :"<<depthOfOddLeaf(t)<<endl;
+    int d = depthDeepestLeftLeafNode(t);
+    cout<<"Depth of deepest leaf node : "<<d<<endl;
+    res = deepestLeftLeaf(t, d);
+    cout<<"Deepest leaf node : "<<res->data<<endl;
+    res = getNextRight(t, t->left->right);
+    if(res)
+        cout<<"Next Right : "<<res->data<<endl;
+    else
+        cout<<"Next Right do not exist\n";
+    res = getNextRight(t, t->right->right);
+    if(res)
+        cout<<"Next Right : "<<res->data<<endl;
+    else
+        cout<<"Next Right do not exist\n";
+    res = getNextRight(t, t->right);
+    if(res)
+        cout<<"Next Right : "<<res->data<<endl;
+    else
+        cout<<"Next Right do not exist\n";
+    maxSumPathRootLeaf(t);
+    d = 0;
+    maxSumPathLeaves(t, &d);
+    cout<<"Max sum between leaves = "<<d<<endl;
+    cout<<"Tree "<<((checkPathSum(t,8))?"does":"does not")<<" have root to leaf path of sum 8\n";
+    cout<<"Tree "<<((checkPathSum(t,9))?"does":"does not")<<" have root to leaf path of sum 9\n";
+    cout<<"Sum of all paths : "<<getTreePathsSum(t)<<endl;
+    cout<<"Difference between sums of odd and even levels : "<<getLevelDiff(t)<<endl;
     deleteTree(&t);
     levelOrder(t);
     return 0;   
