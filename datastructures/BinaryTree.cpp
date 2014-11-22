@@ -913,6 +913,148 @@ void printAllRootLeafPaths(struct node* node) { //print all root to leaf paths i
     printPaths(node, path, 0);
 }
 
+void inorderIterative(struct node *node) { //inorder iterative traversal
+    cout<<"Iterative inorder traversal :";
+    if(node) {
+        stack<struct node *> s;
+        struct node *curr = node;
+        while(!s.empty() || curr) { //while stack is not empty or curr is not NULL
+            if(curr) { //if curr is not NULL traverse the left subtree
+                s.push(curr);
+                curr = curr->left;
+            } else { //else traverse print and traverse the right subtree
+                curr = s.top();
+                s.pop();
+                cout<<" "<<curr->data;
+                curr = curr->right;
+            }
+        }
+    }
+    cout<<endl;
+}
+
+void preorderIterative(struct node *node) { //preorder iterative traversal
+    cout<<"Iterative preorder traversal :";
+    if(node) {
+        stack<struct node *> s;
+        struct node *curr = node;
+        s.push(curr);
+        while(!s.empty()) { //while stack is not empty
+            curr = s.top();
+            s.pop();
+            cout<<" "<<curr->data; //print
+            if(curr->right) //push right child
+                s.push(curr->right);
+            if(curr->left) //push left child
+                s.push(curr->left);
+        }
+    }
+    cout<<endl;
+}
+
+void postorderIterative(struct node* node) { //postorder iterative traversal
+    cout<<"Iterative postorder traversal :";
+    stack<struct node *> res;
+    if(node) {
+        stack<struct node *> s;
+        struct node *curr = node;
+        s.push(curr);
+        while(!s.empty()) { //while stack is not empty
+            curr = s.top();
+            s.pop();
+            res.push(curr); //store node in stack
+            if(curr->left) //push left child
+                s.push(curr->left);
+            if(curr->right) //push right child
+                s.push(curr->right);
+        }
+    }
+    while(!res.empty()) { //finally print the result stack
+        cout<<" "<<res.top()->data;
+        res.pop();
+    }
+    cout<<endl;
+}
+
+void inorderMorris(struct node *node) { //inorder morris traversal
+    cout<<"Inorder Traversal :";
+    if(node) {
+        struct node *curr = node;
+        while(curr != NULL) { //while curr is not NULL
+            if(curr->left == NULL) { //if curr does not have left
+                cout<<" "<<curr->data; //print
+                curr = curr->right; //goto right
+            } else {
+                struct node *pre = curr->left;
+                while(pre->right != NULL && pre->right != curr) //find the inorder predecessor of curr
+                    pre = pre->right;
+                if(pre->right == NULL) { //make curr as right of pre
+                    pre->right = curr;
+                    curr = curr->left;
+                } else { //fix the right of pred
+                    pre->right = NULL;
+                    cout<<" "<<curr->data;
+                    curr = curr->right;
+                }
+            }
+        }
+    }
+    cout<<endl;
+}
+
+void preorderMorris(struct node* node) { //preorder morris traversal
+    cout<<"Preorder Traversal :";
+    if(node) {
+        struct node *curr = node;
+        while(curr) { //while curr is not NULL
+            if(curr->left == NULL) { //if curr does not have left
+                cout<<" "<<curr->data; //print
+                curr = curr->right; //goto right
+            } else {
+                struct node* pre = curr->left;
+                while (pre->right && pre->right != curr) //find the inorder predecessor of curr
+                    pre = pre->right;
+                if (pre->right == curr) { //if right of pre already points to the curr, set right to NULL & move to right of curr
+                    pre->right = NULL;
+                    curr = curr->right;
+                } else { //else print and make right point to curr
+                    cout<<" "<<curr->data;
+                    pre->right = curr;
+                    curr = curr->left;
+                }
+            }
+        }
+    }
+    cout<<endl;
+}
+
+void postorderMorris(struct node* node) { //postorder morris traversal
+    cout<<"Postorder Traversal :";
+    if(node) {
+        stack<struct node *> s;
+        struct node *curr = node;
+        do {
+            while(curr) { //move to leftmost
+                if(curr->right) //push right
+                    s.push(curr->right);
+                s.push(curr); //push curr
+                curr = curr->left; //move to left
+            }
+            curr = s.top(); //pick stack top
+            s.pop();
+            if(curr->right && !s.empty() && s.top() == curr->right) { //if curr right and is on stack top
+                s.pop(); //remove right
+                s.push(curr); //push curr
+                curr = curr->right; //move to right
+            } else { //else print curr and set curr as NULL
+                cout<<" "<<curr->data;
+                curr = NULL;
+            }
+        } while (!s.empty()); //while stack is not empty
+    }
+    cout<<endl;
+}
+
 int main() {
     struct node *t = NULL;
     createTree(&t);
@@ -1011,6 +1153,12 @@ int main() {
     printBetweenLevels(t, 2, 2);
     printBetweenLevels(t, 1, 3);
     printAllRootLeafPaths(t);
+    inorderIterative(t);
+    preorderIterative(t);
+    postorderIterative(t);
+    inorderMorris(t);
+    preorderMorris(t);
+    postorderMorris(t);
     deleteTree(&t);
     levelOrder(t);
     return 0;   
