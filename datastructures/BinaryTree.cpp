@@ -1055,6 +1055,27 @@ void postorderMorris(struct node* node) { //postorder morris traversal
     cout<<endl;
 }
 
+void serialize(struct node *node, vector<int> *res) {
+    if(node) {
+        res->push_back(node->data);
+        serialize(node->left, res);
+        serialize(node->right, res);
+    } else {
+        res->push_back(-1);
+    }
+}
+
+void deserialize(struct node **node, vector<int> res, int *pos=0) {
+    if(res[*pos] != -1) {
+        *node = getNode(res[*pos]);
+        (*pos)++;
+        deserialize(&((*node)->left), res, pos);
+        deserialize(&((*node)->right), res, pos);
+    } else {
+        (*pos)++;
+    }
+}
+
 int main() {
     struct node *t = NULL;
     createTree(&t);
@@ -1159,7 +1180,18 @@ int main() {
     inorderMorris(t);
     preorderMorris(t);
     postorderMorris(t);
+    vector<int> result;
+    serialize(t, &result);
     deleteTree(&t);
-    levelOrder(t);
+    cout<<"After deletion of original tree ", levelOrder(t);
+    struct node *r = NULL;
+    int pos = 0;
+    deserialize(&r, result, &pos);;
+    cout<<"After reconstruction of tree from serialized data ",levelOrder(r);
+    deleteTree(&r);
+    cout<<"Serialized Data :";
+    for(vector<int>::iterator it=result.begin(); it != result.end(); it++)
+        cout<<" "<<*it;
+    cout<<endl;
     return 0;   
 }
