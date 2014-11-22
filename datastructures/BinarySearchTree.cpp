@@ -144,6 +144,34 @@ struct node* inorderSuccessor(struct node *node, struct node *key_node) { //find
     }
 }
 
+struct node* kSmallest(struct node *node, int k, int* curr) { //find kth smallest node
+    if(node) {
+        struct node *temp = kSmallest(node->left, k, curr);
+        if(temp)
+            return temp;
+        (*curr)++;
+        if(k == *curr)
+            return node;
+        return kSmallest(node->right, k, curr);
+    } else {
+        return NULL;
+    }
+}
+
+struct node* kLargest(struct node *node, int k, int *curr) { //find kth largest node
+    if(node) {
+        struct node *temp = kLargest(node->right, k, curr);
+        if(temp)
+            return temp;
+        (*curr)++;
+        if(k == *curr)
+            return node;
+        return kLargest(node->left, k, curr);
+    } else {
+        return NULL;
+    }
+}
+
 struct node* searchBST(struct node *node, int key) { //search key in the BST
     if(node == NULL || node->data == key)
         return node;
@@ -167,10 +195,10 @@ void insertNode(struct node **node, int key) { //BST insert
     }
 }
 
-
 int main() {
     struct node *t = NULL;
     struct node *temp = NULL;
+    int tmp = 0;
     insertNode(&t, 50);
     insertNode(&t, 25);
     insertNode(&t, 75);
@@ -187,18 +215,12 @@ int main() {
     insertNode(&t, 1);
     insertNode(&t, 45);
     insertNode(&t, 13);
-    cout<<"Tree :";
-    printTree(t);
-    cout<<endl;
+    cout<<"Tree :", printTree(t), cout<<endl;
     cout<<(isBST(t)?"Is a Binary Search Tree":"Is NOT a Binary Search Tree")<<endl;
     cout<<"Min = "<<minBST(t)->data<<endl;
     cout<<"Max = "<<maxBST(t)->data<<endl;
-    cout<<"All range = ";
-    printRange(t);
-    cout<<endl;
-    cout<<"Within range [10, 75] = ";
-    printRange(t, 10, 75);
-    cout<<endl;
+    cout<<"All range = ", printRange(t), cout<<endl;
+    cout<<"Within range [10, 75] = ", printRange(t, 10, 75), cout<<endl;
     cout<<"10"<<((searchBST(t, 10) != NULL)?" Found":" Not Found")<<endl;
     cout<<"70"<<((searchBST(t, 70) != NULL)?" Found":" Not Found")<<endl;
     cout<<"49"<<((searchBST(t, 49) != NULL)?" Found":" Not Found")<<endl;
@@ -209,21 +231,20 @@ int main() {
     cout<<"Floor of 49 = "<<floorBST(t, 49)->data<<endl; 
     cout<<"Ceil of 51 = "<<ceilBST(t, 51)->data<<endl;
     cout<<"Floor of 51 = "<<floorBST(t, 51)->data<<endl;
-    temp = inorderSuccessor(t, t); 
-    cout<<"Inorder Successor of 50 = ";
-    if(temp)
-        cout<<temp->data<<endl;
-    else
-        cout<<"Not exist"<<endl;
-    temp = inorderPredecessor(t, t);
-    cout<<"Inorder Predecessor of 50 = ";
-    if(temp)
-        cout<<temp->data<<endl;
-    else
-        cout<<"Not exist"<<endl;         
-    deleteTree(&t);
-    cout<<"Tree :";
-    printTree(t);
-    cout<<endl;
+    temp = inorderSuccessor(t, t), cout<<"Inorder Successor of 50 = ", (temp)?cout<<temp->data<<endl:cout<<"Not exist"<<endl;
+    temp = inorderPredecessor(t, t), cout<<"Inorder Predecessor of 50 = ", (temp)?cout<<temp->data<<endl:cout<<"Not exist"<<endl;
+    tmp = 0, temp = kSmallest(t, 0, &tmp), cout<<"0th smallest in tree= ", (temp)?cout<<temp->data<<endl:cout<<"Not exist "<<endl;
+    tmp = 0, temp = kLargest(t, 0, &tmp), cout<<"0th largest in tree= ", (temp)?cout<<temp->data<<endl:cout<<"Not exist "<<endl;
+    tmp = 0, temp = kSmallest(t, 17, &tmp), cout<<"17th smallest in tree= ", (temp)?cout<<temp->data<<endl:cout<<"Not exist "<<endl;
+    tmp = 0, temp = kLargest(t, 17, &tmp), cout<<"17th largest in tree= ", (temp)?cout<<temp->data<<endl:cout<<"Not exist "<<endl;
+    tmp = 0, temp = kSmallest(t, 1, &tmp), cout<<"1th smallest in tree= ", (temp)?cout<<temp->data<<endl:cout<<"Not exist "<<endl;
+    tmp = 0, temp = kLargest(t, 1, &tmp), cout<<"1th largest in tree= ", (temp)?cout<<temp->data<<endl:cout<<"Not exist "<<endl;
+    tmp = 0, temp = kSmallest(t, 16, &tmp), cout<<"16th smallest in tree= ", (temp)?cout<<temp->data<<endl:cout<<"Not exist "<<endl;
+    tmp = 0, temp = kLargest(t, 16, &tmp), cout<<"16th largest in tree= ", (temp)?cout<<temp->data<<endl:cout<<"Not exist "<<endl;
+    tmp = 0, temp = kSmallest(t, 2, &tmp), cout<<"2th smallest in tree= ", (temp)?cout<<temp->data<<endl:cout<<"Not exist "<<endl;
+    tmp = 0, temp = kLargest(t, 2, &tmp), cout<<"2th largest in tree= ", (temp)?cout<<temp->data<<endl:cout<<"Not exist "<<endl;
+    tmp = 0, temp = kSmallest(t, 8, &tmp), cout<<"8th smallest in tree= ", (temp)?cout<<temp->data<<endl:cout<<"Not exist "<<endl;
+    tmp = 0, temp = kLargest(t, 8, &tmp), cout<<"8th largest in tree= ", (temp)?cout<<temp->data<<endl:cout<<"Not exist "<<endl;
+    deleteTree(&t), cout<<"Deleted Tree :", printTree(t),cout<<endl;
     return 0;
 }
