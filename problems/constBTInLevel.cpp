@@ -1,4 +1,4 @@
-//construct BT from inorder and preorder traversal
+//construct BT from inorder and levelorder traversal
 #include<iostream>
 #include<cstdlib>
 using namespace std;
