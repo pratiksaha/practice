@@ -36,15 +36,15 @@ int search(char arr[], int start, int end, char value) {
     return -1;
 }
 
-struct node* buildTreeUtil(char in[], char pre[], int start, int end, int *ind) {
+struct node* buildTreeUtil(char in[], char post[], int start, int end, int *ind) {
     if(start > end)
         return NULL;
     struct node *temp = getNode(post[(*ind)--]);
     if(start == end)
         return temp;
     int inIndex = search(in, start, end, temp->data);
-    temp->left = buildTreeUtil(in, post, start, inIndex-1, ind);
     temp->right = buildTreeUtil(in, post, inIndex+1, end, ind);
+    temp->left = buildTreeUtil(in, post, start, inIndex-1, ind);
     return temp;
 }
 
@@ -52,7 +52,6 @@ struct node *buildTree(char in[], char post[], int size) {
     int postIndex = size-1;
     return buildTreeUtil(in, post, 0, size-1, &postIndex);
 }
-
 
 int main() {
     char in[] = {'D', 'B', 'E', 'A', 'F', 'C'};

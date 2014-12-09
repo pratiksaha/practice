@@ -53,7 +53,6 @@ struct node *buildTree(char in[], char pre[], int size) {
     return buildTreeUtil(in, pre, 0, size-1, &preIndex);
 }
 
-
 int main() {
     char in[] = {'D', 'B', 'E', 'A', 'F', 'C'};
     char pre[] = {'A', 'B', 'D', 'E', 'C', 'F'};

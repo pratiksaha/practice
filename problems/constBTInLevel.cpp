@@ -61,7 +61,6 @@ struct node* buildTree(int in[], int level[], int start, int end, int n) {
     return temp;
 }
 
-
 int main() {
     int in[] = {4, 8, 10, 12, 14, 20, 22};
     int level[] = {20, 8, 22, 4, 12, 10, 14};
