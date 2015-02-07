@@ -148,6 +148,13 @@ void levelOrderSpiral(struct node* node) { //Levelorder Spiral traversal
     cout<<endl;
 }
 
+bool isLeaf(struct node *node) { //check if a node is leaf
+    if (node!=NULL && node->left==NULL && node->right == NULL)
+        return true;
+    else
+        return false;
+}
+
 void printLeaves(struct node* node) { //print all leaves of the (sub)tree rooted at node
     if(node) {
         printLeaves(node->left);
@@ -385,7 +392,7 @@ void printVerticalOrderSum(struct node *node) { //print vertical order sums of a
     cout<<endl;
 }
 
-void printLeftView(struct node *node, int lvl, int *max_so_far) {
+void printLeftView(struct node *node, int lvl, int *max_so_far) { //print left view
     if(node) {
         if (*max_so_far<lvl) {
             cout<<" "<<node->data;
@@ -396,7 +403,7 @@ void printLeftView(struct node *node, int lvl, int *max_so_far) {
     }
 }
 
-void printRightView(struct node *node, int lvl, int *max_so_far) {
+void printRightView(struct node *node, int lvl, int *max_so_far) { //print right view
     if(node) {
         if (*max_so_far<lvl) {
             cout<<" "<<node->data;
@@ -407,7 +414,7 @@ void printRightView(struct node *node, int lvl, int *max_so_far) {
     }
 }
 
-void printTopView(struct node *node) {
+void printTopView(struct node *node) { //print top view
     cout<<"Top View : ";
     if(node) {
         struct nodeItem{
@@ -442,7 +449,52 @@ void printTopView(struct node *node) {
     cout<<endl;
 }
 
-bool printAncestors(struct node *node, struct node *key) {
+void printBottomView(struct node *node) { //print bottom views of a tree
+    queue<struct node *> nodeq;
+    queue<int> hdq;
+    unordered_map<int, int> table;
+    unordered_map<int, int>::iterator it;
+    nodeq.push(node);
+    hdq.push(0);
+    while (!nodeq.empty()) {
+        struct node *temp = nodeq.front();
+        int hd = hdq.front();
+        nodeq.pop();
+        hdq.pop();
+        it = table.find(hd);
+        if (it != table.end() ) {
+            it->second = temp->data;
+        } else {
+            table.insert(make_pair(hd, temp->data));
+        }
+        if (temp->left) {
+            nodeq.push(temp->left);
+            hdq.push(hd-1);
+        }
+        if (temp->right) {
+            nodeq.push(temp->right);
+            hdq.push(hd+1);
+        }
+    }
+    cout<<"Bottom view :";
+    for(it=table.begin(); it!=table.end(); it++)
+        cout<<" "<<it->second;
+    cout<<endl;
+}
+
+int sumLeftLeaves(struct node *node) { //return sum of all left leaves
+    int sum = 0;
+    if (node) {
+        if (isLeaf(node->left))
+            sum += node->left->data;
+        else
+            sum += sumLeftLeaves(node->left);
+        sum += sumLeftLeaves(node->right);
+    }
+    return sum;
+}
+
+bool printAncestors(struct node *node, struct node *key) { //print ancestors of a key node
     if(node) {
         if (node == key) {
             return true;
@@ -457,7 +509,7 @@ bool printAncestors(struct node *node, struct node *key) {
     }
 }
 
-void printAncestorsItr(struct node *node, struct node *key) {
+void printAncestorsItr(struct node *node, struct node *key) { //print ancestors of a key ndoe iteratively
     cout<<"Ancestors of "<<key->data<<" :";
     if(node) {
         stack<struct node *> s;
@@ -1102,6 +1154,8 @@ int main() {
     tmp = 0;
     cout<<"Right View :", printRightView(t, 0, &tmp), cout<<endl;
     printTopView(t);
+    printBottomView(t);
+    cout<<"Sum of all left leaves : "<<sumLeftLeaves(t)<<endl;
     printVerticalOrderSum(t);
     cout<<"Print ancestors :", printAncestors(t, t->left->right), cout<<endl;
     printAncestorsItr(t, t->left->right);
