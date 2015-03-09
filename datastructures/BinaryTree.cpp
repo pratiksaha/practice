@@ -277,6 +277,34 @@ int treeHeight(struct node *node) { //get height of tree iteratively
     }
 }
 
+bool isCompleteRecrUtil(struct node* node, int index, int nodes) { //util func used by isCompleteRecr
+    if (node) {
+        if (index >= nodes) // tree is not complete if index is more than no of nodes
+            return false;
+        else // Recur for left and right subtrees
+            return (isCompleteRecrUtil(node->left, 2*index+1, nodes) && isCompleteRecrUtil(node->right, 2*index+2, nodes));
+    } else {
+        return true;
+    }
+}
+
+bool isCompleteRecr(struct node* node) { //check if a tree is complete recursively
+    return isCompleteRecrUtil(node, 0, getSize(node));
+}
+
+bool isFull(struct node *node) { //check if a tree is full
+    if (node) {
+        if (node->left == NULL && node->right == NULL) //if leaf node
+            return true;
+        else if (node->left && node->right) //if both left and right are not NULL
+            return (isFull(node->left) && isFull(node->right));
+        else
+            return false;
+    } else { //if empty tree
+        return true;
+    }
+}
+
 bool isBalanced(struct node *node, int* height) { //check if tree is balanced
     if(node == NULL) {
         *height = 0;
@@ -1138,11 +1166,13 @@ int main() {
     levelOrderReverse(t);
     levelOrderSpiral(t);
     boundaryTraversal(t);
-    cout<<"Checking if tree is complete : "<<isComplete(t)<<endl;
+    cout<<"Checking if tree is complete (itr): "<<isComplete(t)<<endl;
     cout<<"Size of tree = "<<getSize(t)<<endl;
     cout<<"No of leaves = "<<getLeafCount(t)<<endl;
     cout<<"Height of tree = "<<getHeight(t)<<endl;
     cout<<"Height of tree (itr) = "<<treeHeight(t)<<endl;
+    cout<<"Checking if tree is complete : "<<isCompleteRecr(t)<<endl;
+    cout<<"Checking if tree is full : "<<isFull(t)<<endl;
     int h = 0;
     cout<<"Checking balance of the tree : "<<isBalanced(t, &h)<<endl;
     int m = 0, n = 0;
