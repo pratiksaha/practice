@@ -11,8 +11,7 @@ class minStack {
         bool isEmpty();
         void push(int x);
         int pop();
-        int getMin();
-        
+        int getMin();  
 };
  
 bool minStack::isEmpty() {
