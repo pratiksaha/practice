@@ -57,6 +57,26 @@ unsigned char swapNibbles(unsigned char x)
     return (((x & 0x0F)<<4) | ((x & 0xF0)>>4));
 }
 
+//function to add x and y
+int add(int x, int y) {
+    while (y != 0) { //iterate till there is no carry 
+        int carry = x & y; //carry now contains common set bits of x and y
+        x = x^y; //sum of bits of x and y where at least one of the bits is not set
+        y = carry << 1; //carry is shifted by one so that adding it to x gives the required sum
+    }
+    return x;
+}
+
+//function to subtract y from x
+int subtract(int x, int y) {
+    while (y != 0) { //iterate till there is no carry
+        int borrow = (~x)&y; //borrow contains common set bits of y and unset bits of x
+        x = x^y; //subtraction of bits of x and y where at least one of the bits is not set
+        y = borrow<<1; //borrow is shifted by one so that subtracting it from x gives the required sum
+    }
+    return x;
+}
+
 int main(){
     cout<<"Swapping bits 0 and 3 in 28 is "<<swapBits(28,0,3,2)<<endl;
     cout<<"Left rotate of 16 by 2 is "<<leftRotate(16,2)<<endl;
@@ -64,5 +84,7 @@ int main(){
     cout<<"Reversing bits of 6 is "<<reverseBits(6)<<endl;
     cout<<"Swapping even and odd bits of 23 is "<<swapEvenOddBits(23)<<endl;
     cout<<"Swapping nibbles of 100 is "<<swapNibbles('d')<<endl;
+    cout<<"11+6 = "<<add(11, 6)<<endl;
+    cout<<"11-6 = "<<subtract(11, 6)<<endl;
     return 0;
 }
