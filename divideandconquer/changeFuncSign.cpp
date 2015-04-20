@@ -1,3 +1,4 @@
+//to find the point where the function changes sign
 #include<iostream>
 using namespace std;
 
