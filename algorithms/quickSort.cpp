@@ -3,7 +3,7 @@
 #include<cstdlib>
 using namespace std;
 
-int partition(int arr[], int l, int r) { //CLRS partition
+int partition(int arr[], int l, int r) { //Lomuto partition
     int x = arr[r]; //pivot
     int i = l-1;
     for (int j=l; j<=r-1; j++) {
@@ -16,11 +16,35 @@ int partition(int arr[], int l, int r) { //CLRS partition
     return i+1;
 }
 
-void quickSort(int arr[], int l, int r) { //CLRS quick sort
+void quickSort(int arr[], int l, int r) { //Lomuto quick sort
     if (l<r) {
         int p = partition(arr, l, r);
         quickSort(arr, l, p-1);
         quickSort(arr, p+1, r);
+    }
+}
+
+int partitionHoare(int arr[], int l, int r) { //Hoare partition
+    int x = arr[l];
+    int i = l;
+    int j = r;
+    while(1) {
+        while(arr[j] > x)
+            j--;
+        while(arr[i] < x)
+            i++;
+        if (i<j)
+            swap(arr[i], arr[j]);
+        else
+            return j;
+    }
+}
+
+void quickSortHoare(int arr[], int l, int r) { //Hoare quick sort
+    if (l<r) {
+        int p = partitionHoare(arr, l, r);
+        quickSortHoare(arr, l, p-1);
+        quickSortHoare(arr, p+1, r);
     }
 }
 
@@ -240,5 +264,12 @@ int main() {
     quickSort(dll);
     cout<<"Sorted ";
     printList(dll);
+    int a3[] = {10, 7, 8, 9, 1, 5};
+    int n3 = sizeof(a3)/sizeof(a3[0]);
+    cout<<"Input Array :";
+    printArray(a3, n3);
+    quickSortHoare(a3, 0, n3-1);
+    cout<<"Sorted Array :";
+    printArray(a3, n3);
     return 0;
 }
