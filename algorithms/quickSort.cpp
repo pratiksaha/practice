@@ -50,6 +50,88 @@ void printArray(int arr[], int size) {
     cout<<endl;
 }
 
+struct SLL {
+    int data;
+    struct SLL *next;
+};
+
+struct SLL* getNode() {
+    struct SLL *temp = (struct SLL *)malloc(sizeof(struct SLL));
+    if (temp == NULL) {
+        cout<<"Memory Full"<<endl;
+    }
+    return temp;
+}
+
+void push_front(struct SLL **head, int key) {
+    struct SLL* temp = getNode();
+    temp->data = key;
+    temp->next = *head;
+    *head = temp;
+}
+
+struct SLL *getTail(struct SLL *curr) {
+    while (curr && curr->next)
+        curr = curr->next;
+    return curr;
+}
+
+struct SLL *partition(struct SLL *head, struct SLL *end, struct SLL **newHead, struct SLL **newEnd) {
+    struct SLL *pivot = end;
+    struct SLL *prev = NULL, *curr = head, *tail = pivot;
+    while (curr != pivot) {
+        if (curr->data < pivot->data) {
+            if ((*newHead) == NULL) //first node that has a value less than the pivot becomes the new head
+                (*newHead) = curr;
+            prev = curr;
+            curr = curr->next;
+        } else {
+            if (prev) //move curr node to next of tail and change tail
+                prev->next = curr->next;
+            struct SLL *temp = curr->next;
+            curr->next = NULL;
+            tail->next = curr;
+            tail = curr;
+            curr = temp;
+        }
+    }
+    if ((*newHead) == NULL) //pivot becomes the head if the pivot data is the smallest elem in the curr list
+        (*newHead) = pivot;
+    (*newEnd) = tail; //update newEnd to the curr last node
+    return pivot;
+}
+
+struct SLL *quickSort(struct SLL *head, struct SLL *end) {
+    if (head == NULL || head == end)
+        return head;
+    struct SLL *newHead = NULL, *newEnd = NULL;
+    struct SLL *pivot = partition(head, end, &newHead, &newEnd); //partition
+    if (newHead != pivot) {
+        struct SLL *temp = newHead;
+        while (temp->next != pivot) //set the node before the pivot node as NULL
+            temp = temp->next;
+        temp->next = NULL;
+        newHead = quickSort(newHead, temp); //recur for the list before pivot
+        temp = getTail(newHead); //change next of last node of the left half to pivot
+        temp->next = pivot;
+    }
+    pivot->next = quickSort(pivot->next, newEnd); //recur for the list after the pivot element
+    return newHead;
+}
+
+void quickSort(struct SLL **head) {
+    (*head) = quickSort(*head, getTail(*head));
+}
+
+void printList(struct SLL *head) {
+    cout<<"Singly Linked List :";
+    while(head != NULL) {
+        cout<<" "<<head->data;
+        head = head->next;
+    }
+    cout<<endl;
+}
+
 int main() {
     int a1[] = {10, 7, 8, 9, 1, 5};
     int n1 = sizeof(a1)/sizeof(a1[0]);
@@ -65,5 +147,16 @@ int main() {
     quickSortIterative(a2, 0, n2-1);
     cout<<"Sorted Array :";
     printArray(a2, n2);
+    struct SLL* sll = NULL;
+    push_front(&sll, 5);
+    push_front(&sll, 20);
+    push_front(&sll, 4);
+    push_front(&sll, 3);
+    push_front(&sll, 30);
+    cout<<"Input ";
+    printList(sll);
+    quickSort(&sll);
+    cout<<"Sorted ";
+    printList(sll);
     return 0;
 }
