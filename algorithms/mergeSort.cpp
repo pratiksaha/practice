@@ -1,4 +1,5 @@
 #include<iostream>
+#include<cstdlib>
 using namespace std;
 
 void merge(int arr[], int l, int m, int r) {
@@ -61,6 +62,85 @@ void printArray(int arr[], int size) {
     cout<<endl;
 }
 
+struct node {
+    int data;
+    struct node *next;
+};
+
+void listSplit(struct node* head, struct node** left, struct node** right) { //split head list into left and right
+    if (head==NULL || head->next==NULL) { //length < 2 cases
+        *left = head;
+        *right = NULL;
+    } else { //tortoise and hare
+        struct node* slow = head;
+        struct node* fast = head->next;
+        while (fast) {
+            fast = fast->next;
+            if (fast) {
+                slow = slow->next;
+                fast = fast->next;
+            }
+        }
+        *left = head;
+        *right = slow->next;
+        slow->next = NULL;
+    }
+}
+
+struct node* merge(struct node* a, struct node* b) {
+    if (a==NULL) {
+        return b;
+    } else if (b==NULL) {
+        return a;
+    } else {
+        struct node* result = NULL;
+        if (a->data <= b->data) {
+            result = a;
+            result->next = merge(a->next, b);
+        } else {
+            result = b;
+            result->next = merge(a, b->next);
+        }
+        return result;
+    }
+}
+
+void mergeSort(struct node** headRef) {
+    struct node* head = *headRef;
+    if (head && head->next) { //proceed only if head contains more than 1 element
+        struct node* a;
+        struct node* b;
+        listSplit(head, &a, &b);
+        mergeSort(&a);
+        mergeSort(&b);
+        *headRef = merge(a, b);
+    }
+}
+
+struct node* getNode() {
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
+    if (temp == NULL) {
+        cout<<"Memory Full"<<endl;
+    }
+    return temp;
+}
+
+void push_front(struct node **head, int key) {
+    struct node* temp = getNode();
+    temp->data = key;
+    temp->next = *head;
+    *head = temp;
+}
+
+void printList(struct node *head) {
+    cout<<"Linked List :";
+    while(head != NULL) {
+        cout<<" "<<head->data;
+        head = head->next;
+    }
+    cout<<endl;
+}
+
 int main() {
     int a1[] = {12, 11, 13, 5, 6, 7};
     int n1 = sizeof(a1)/sizeof(a1[0]);
@@ -76,5 +156,17 @@ int main() {
     mergeSort(a2, n2);
     cout<<"Sorted Array :";
     printArray(a1, n2);
+    struct node* a = NULL;
+    push_front(&a, 15);
+    push_front(&a, 10);
+    push_front(&a, 5);
+    push_front(&a, 20);
+    push_front(&a, 3);
+    push_front(&a, 2);
+    cout<<"Input ";
+    printList(a);
+    mergeSort(&a);
+    cout<<"Sorted ";
+    printList(a);
     return 0;
 }
