@@ -36,12 +36,22 @@ void merge(int arr[], int l, int m, int r) {
 }
 
 
-void mergeSort(int arr[], int l, int r) {
+void mergeSort(int arr[], int l, int r) { //recursive merge sort
     if (l<r) {
         int m = (l+r)/2;
         mergeSort(arr, l, m);
         mergeSort(arr, m+1, r);
         merge(arr, l, m, r);
+    }
+}
+
+void mergeSort(int arr[], int n) { //iteartive morge sort
+    for (int size=1; size<=n-1; size=2*size) { //merge subarrays of sixe 1, 2, 4 and so on
+        for (int l=0; l<n-1; l += 2*size) {
+            int m = l+size-1;
+            int r = min(l+2*size-1, n-1);
+            merge(arr, l, m, r);
+        }
     }
 }
 
@@ -59,5 +69,12 @@ int main() {
     mergeSort(a1, 0, n1-1);
     cout<<"Sorted Array :";
     printArray(a1, n1);
+    int a2[] = {12, 11, 13, 5, 6, 7};
+    int n2 = sizeof(a2)/sizeof(a2[0]);
+    cout<<"Input Array :";
+    printArray(a2, n2);
+    mergeSort(a2, n2);
+    cout<<"Sorted Array :";
+    printArray(a1, n2);
     return 0;
 }
