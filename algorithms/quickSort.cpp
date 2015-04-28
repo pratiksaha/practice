@@ -50,6 +50,77 @@ void printArray(int arr[], int size) {
     cout<<endl;
 }
 
+struct DLL {
+    int data;
+    struct DLL *prev, *next;
+};
+
+struct DLL* getNode(int key) {
+    struct DLL* temp = (struct DLL *)malloc(sizeof(struct DLL));
+    if (temp == NULL) {
+        cout<<"Memory overflow\n";
+        exit(1);
+    } else {
+        temp->data = key;
+        temp->prev = NULL;
+        temp->next = NULL;
+    }
+    return temp;
+}
+
+void push_front(struct DLL** head, int key) {
+    struct DLL *temp = getNode(key);
+    if (*head == NULL) {
+        *head = temp;
+    } else {
+        temp->next = *head;
+        temp->prev = NULL;
+        (*head)->prev = temp;
+        *head = temp;
+    }
+}
+
+struct DLL *getTail(struct DLL *curr) {
+    while (curr && curr->next)
+        curr = curr->next;
+    return curr;
+}
+
+struct DLL* partition(struct DLL *l, struct DLL *r) {
+    int x  = r->data;
+    struct DLL *i = l->prev;
+    for (struct DLL* j=l; j!=r; j=j->next) {
+        if (j->data <= x) {
+            i = (i == NULL)? l : i->next;
+            swap(i->data, j->data);
+        }
+    }
+    i = (i == NULL)? l : i->next;
+    swap(i->data, r->data);
+    return i;
+}
+
+void quickSort(struct DLL* l, struct DLL *r) {
+    if (r!=NULL && l!=r && l!=r->next) {
+        struct DLL *p = partition(l, r);
+        quickSort(l, p->prev);
+        quickSort(p->next, r);
+    }
+}
+
+void quickSort(struct DLL *head) {
+    quickSort(head, getTail(head));
+}
+
+void printList(struct DLL *node) {
+    cout<<"Doubly Linked List :";
+    while(node != NULL) {
+        cout<<" "<<node->data;
+        node = node->next;
+    }
+    cout<<endl;
+}
+
 struct SLL {
     int data;
     struct SLL *next;
@@ -158,5 +229,16 @@ int main() {
     quickSort(&sll);
     cout<<"Sorted ";
     printList(sll);
+    struct DLL* dll = NULL;
+    push_front(&dll, 5);
+    push_front(&dll, 20);
+    push_front(&dll, 4);
+    push_front(&dll, 3);
+    push_front(&dll, 30);
+    cout<<"Input ";
+    printList(dll);
+    quickSort(dll);
+    cout<<"Sorted ";
+    printList(dll);
     return 0;
 }
