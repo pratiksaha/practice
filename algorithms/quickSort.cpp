@@ -48,6 +48,20 @@ void quickSortHoare(int arr[], int l, int r) { //Hoare quick sort
     }
 }
 
+int partitionRandomized(int arr[], int l, int r) { //Randomized partition
+    int i = l + (rand()%(r-l+1)); //simple way to generate a random no between l and r
+    swap(arr[r], arr[i]);
+    return partition(arr, l, r);
+}
+
+void quickSortRandomized(int arr[], int l, int r) { //Randomized quick sort
+    if (l<r) {
+        int p = partitionRandomized(arr, l, r);
+        quickSortRandomized(arr, l, p-1);
+        quickSortRandomized(arr, p+1, r);
+    }
+}
+
 void quickSortIterative(int arr[], int l, int r) {
     int stack[r-l+1];
     int top = -1;
@@ -271,5 +285,12 @@ int main() {
     quickSortHoare(a3, 0, n3-1);
     cout<<"Sorted Array :";
     printArray(a3, n3);
+    int a4[] = {10, 7, 8, 9, 1, 5};
+    int n4 = sizeof(a4)/sizeof(a4[0]);
+    cout<<"Input Array :";
+    printArray(a4, n4);
+    quickSortRandomized(a4, 0, n4-1);
+    cout<<"Sorted Array :";
+    printArray(a4, n4);
     return 0;
 }
