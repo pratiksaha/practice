@@ -1,3 +1,4 @@
+//Merge Sort
 #include<iostream>
 #include<cstdlib>
 using namespace std;
@@ -46,7 +47,7 @@ void mergeSort(int arr[], int l, int r) { //recursive merge sort
     }
 }
 
-void mergeSort(int arr[], int n) { //iteartive morge sort
+void mergeSort(int arr[], int n) { //iterative merge sort
     for (int size=1; size<=n-1; size=2*size) { //merge subarrays of sixe 1, 2, 4 and so on
         for (int l=0; l<n-1; l += 2*size) {
             int m = l+size-1;
