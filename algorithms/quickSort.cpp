@@ -1,6 +1,7 @@
 //Quick Sort
 #include<iostream>
 #include<cstdlib>
+#include<algorithm>
 using namespace std;
 
 int partition(int arr[], int l, int r) { //Lomuto partition
@@ -79,6 +80,55 @@ void quickSortIterative(int arr[], int l, int r) {
             stack[++top] = p+1;
             stack[++top] = r;
         }
+    }
+}
+
+int partitionNLogN(int arr[], int l, int r, int x) {
+    int i;
+    for (i=l; i<r; i++)
+        if (arr[i]==x)
+            break;
+    swap(arr[i], arr[r]);
+    i = l;
+    for (int j=l; j<=r-1; j++) {
+        if (arr[j]<=x) {
+            swap(arr[i], arr[j]);
+            i++;
+        }
+    }
+    swap(arr[i], arr[r]);
+    return i;
+}
+
+int median(int arr[], int l, int r) { //O(n)
+    int n = r-l+1;
+    int medians[(n+4)/5];
+    int i;
+    for(i=0; i<n/5; i++) {
+        sort(arr+l+i*5, arr+l+i*5+5);
+        medians[i] = arr[l+i*5+2]; //2 = 5/2
+    }
+    if (i*5<n) { //special handling for last group as this may have less than 5 elems
+        sort(arr+l+i*5, arr+l+i*5+n%5);
+        medians[i] = arr[l+i*5+(n%5)/2];
+        i++;
+    }
+    int medianMedian = (i==1)?i:median(medians, 0, i-1);
+    int pos = partitionNLogN(arr, l, r, medianMedian);
+    if (pos-l == (n/2)-1)
+        return arr[pos];
+    else if (pos-l > (n/2)-1)
+        return median(arr, l, pos-1);
+    else
+        return median(arr, pos+1, r);
+}
+
+void quickSortNLogN(int arr[], int l, int r) {
+    if (l<r) {
+        int med = median(arr, l, r);
+        int p = partitionNLogN(arr, l, r, med);
+        quickSortNLogN(arr, l, p-1);
+        quickSortNLogN(arr, p+1, r);
     }
 }
 
@@ -290,6 +340,13 @@ int main() {
     cout<<"Input Array :";
     printArray(a4, n4);
     quickSortRandomized(a4, 0, n4-1);
+    cout<<"Sorted Array :";
+    printArray(a4, n4);
+    int a5[] = {10, 7, 8, 9, 1, 5};
+    int n5 = sizeof(a5)/sizeof(a5[0]);
+    cout<<"Input Array :";
+    printArray(a5, n5);
+    quickSortNLogN(a5, 0, n5-1);
     cout<<"Sorted Array :";
     printArray(a4, n4);
     return 0;
