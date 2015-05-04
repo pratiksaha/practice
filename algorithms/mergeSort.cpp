@@ -63,18 +63,18 @@ void printArray(int arr[], int size) {
     cout<<endl;
 }
 
-struct node {
+struct SLL {
     int data;
-    struct node *next;
+    struct SLL *next;
 };
 
-void listSplit(struct node* head, struct node** left, struct node** right) { //split head list into left and right
+void listSplit(struct SLL* head, struct SLL** left, struct SLL** right) { //split head list into left and right
     if (head==NULL || head->next==NULL) { //length < 2 cases
         *left = head;
         *right = NULL;
     } else { //tortoise and hare
-        struct node* slow = head;
-        struct node* fast = head->next;
+        struct SLL* slow = head;
+        struct SLL* fast = head->next;
         while (fast) {
             fast = fast->next;
             if (fast) {
@@ -88,13 +88,13 @@ void listSplit(struct node* head, struct node** left, struct node** right) { //s
     }
 }
 
-struct node* merge(struct node* a, struct node* b) {
+struct SLL* merge(struct SLL* a, struct SLL* b) {
     if (a==NULL) {
         return b;
     } else if (b==NULL) {
         return a;
     } else {
-        struct node* result = NULL;
+        struct SLL* result = NULL;
         if (a->data <= b->data) {
             result = a;
             result->next = merge(a->next, b);
@@ -106,11 +106,11 @@ struct node* merge(struct node* a, struct node* b) {
     }
 }
 
-void mergeSort(struct node** headRef) {
-    struct node* head = *headRef;
+void mergeSort(struct SLL** headRef) {
+    struct SLL* head = *headRef;
     if (head && head->next) { //proceed only if head contains more than 1 element
-        struct node* a;
-        struct node* b;
+        struct SLL* a;
+        struct SLL* b;
         listSplit(head, &a, &b);
         mergeSort(&a);
         mergeSort(&b);
@@ -118,28 +118,105 @@ void mergeSort(struct node** headRef) {
     }
 }
 
-struct node* getNode() {
-    struct node *temp = (struct node *)malloc(sizeof(struct node));
+struct SLL* getNode() {
+    struct SLL *temp = (struct SLL *)malloc(sizeof(struct SLL));
     if (temp == NULL) {
         cout<<"Memory Full"<<endl;
     }
     return temp;
 }
 
-void push_front(struct node **head, int key) {
-    struct node* temp = getNode();
+void push_front(struct SLL **head, int key) {
+    struct SLL* temp = getNode();
     temp->data = key;
     temp->next = *head;
     *head = temp;
 }
 
-void printList(struct node *head) {
+void printList(struct SLL *head) {
     cout<<"Linked List :";
     while(head != NULL) {
         cout<<" "<<head->data;
         head = head->next;
     }
     cout<<endl;
+}
+
+struct DLL {
+    int data;
+    struct DLL *prev, *next;
+};
+
+struct DLL* getNode(int key) {
+    struct DLL* temp = (struct DLL *)malloc(sizeof(struct DLL));
+    if (temp == NULL) {
+        cout<<"Memory overflow\n";
+        exit(1);
+    } else {
+        temp->data = key;
+        temp->prev = NULL;
+        temp->next = NULL;
+    }
+    return temp;
+}
+
+void push_front(struct DLL** head, int key) {
+    struct DLL *temp = getNode(key);
+    if (*head == NULL) {
+        *head = temp;
+    } else {
+        temp->next = *head;
+        temp->prev = NULL;
+        (*head)->prev = temp;
+        *head = temp;
+    }
+}
+
+void printList(struct DLL *node) {
+    cout<<"Doubly Linked List :";
+    while(node != NULL) {
+        cout<<" "<<node->data;
+        node = node->next;
+    }
+    cout<<endl;
+}
+
+struct DLL *split(struct DLL *head) {
+    struct DLL *fast = head,*slow = head;
+    while (fast->next && fast->next->next) {
+        fast = fast->next->next;
+        slow = slow->next;
+    }
+    struct DLL *temp = slow->next;
+    slow->next = NULL;
+    return temp;
+}
+
+struct DLL *merge(struct DLL *first, struct DLL *second) {
+    if (!first)
+        return second;
+    if (!second)
+        return first;
+    if (first->data < second->data) {
+        first->next = merge(first->next,second);
+        first->next->prev = first;
+        first->prev = NULL;
+        return first;
+    } else {
+        second->next = merge(first,second->next);
+        second->next->prev = second;
+        second->prev = NULL;
+        return second;
+    }
+}
+
+struct DLL *mergeSort(struct DLL *head) {
+    if (!head || !head->next)
+        return head;
+    struct DLL *second = split(head);
+    head = mergeSort(head);
+    second = mergeSort(second);
+    return merge(head,second);
 }
 
 int main() {
@@ -157,17 +234,29 @@ int main() {
     mergeSort(a2, n2);
     cout<<"Sorted Array :";
     printArray(a1, n2);
-    struct node* a = NULL;
-    push_front(&a, 15);
-    push_front(&a, 10);
-    push_front(&a, 5);
-    push_front(&a, 20);
-    push_front(&a, 3);
-    push_front(&a, 2);
+    struct SLL* sll = NULL;
+    push_front(&sll, 15);
+    push_front(&sll, 10);
+    push_front(&sll, 5);
+    push_front(&sll, 20);
+    push_front(&sll, 3);
+    push_front(&sll, 2);
     cout<<"Input ";
-    printList(a);
-    mergeSort(&a);
+    printList(sll);
+    mergeSort(&sll);
     cout<<"Sorted ";
-    printList(a);
+    printList(sll);
+    struct DLL* dll = NULL;
+    push_front(&dll, 15);
+    push_front(&dll, 10);
+    push_front(&dll, 5);
+    push_front(&dll, 20);
+    push_front(&dll, 3);
+    push_front(&dll, 2);
+    cout<<"Input ";
+    printList(dll);
+    mergeSort(dll);
+    cout<<"Sorted ";
+    printList(dll);
     return 0;
 }
