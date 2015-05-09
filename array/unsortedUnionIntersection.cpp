@@ -1,6 +1,8 @@
 //to print union and intersection of two unsorted arrays
+//Using features of C++ Standard (2011) Compile using g++ -std=c++11
 #include<iostream>
 #include<algorithm>
+#include<unordered_map>
 using namespace std;
 
 int binarySearch(int arr[], int l, int r, int x) {
@@ -33,9 +35,29 @@ void UnionIntersection(int arr1[], int arr2[], int m, int n) {
     cout<<endl;
 }
 
+void UnionIntersectionHash(int arr1[], int arr2[], int m, int n) {
+    unordered_map<int, int> hash;
+    unordered_map<int, int>::iterator it;
+    cout<<"Union :";
+    for (int i=0; i<m; i++) {
+        cout<<" "<<arr1[i];
+        hash.insert(make_pair(arr1[i], 1));
+    }
+    for (int i=0; i<n; i++)
+        if(hash.find(arr2[i]) == hash.end())
+            cout<<" "<<arr2[i];
+    cout<<endl;
+    cout<<"Intersection :";
+    for (int i=0; i<n; i++)
+        if(hash.find(arr2[i]) != hash.end())
+            cout<<" "<<arr2[i];
+    cout<<endl;
+}
+
 int main() {
     int arr1[] = {3, 8, 6, 20, 7};
     int arr2[] = {7, 1, 5, 2, 3, 6};
     UnionIntersection(arr1, arr2, sizeof(arr1)/sizeof(arr1[0]), sizeof(arr2)/sizeof(arr2[0]));
+    UnionIntersectionHash(arr1, arr2, sizeof(arr1)/sizeof(arr1[0]), sizeof(arr2)/sizeof(arr2[0]));
     return 0;
 }
