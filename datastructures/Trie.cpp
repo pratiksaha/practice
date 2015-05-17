@@ -1,4 +1,4 @@
-// Trie
+// Trie or Digital Tree or Prefix Tree
 #include<iostream>
 #include<cstdlib>
 #include<cstring>
@@ -6,7 +6,6 @@
 using namespace std;
 
 #define ALPHABET_SIZE 26
-
 #define CHAR_TO_INDEX(c) ((int)c - (int)'a')
 
 struct node {
