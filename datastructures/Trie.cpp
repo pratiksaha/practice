@@ -92,21 +92,21 @@ bool searchTrie(struct node* root, char* key) {
 
 int main() {
     char* keys[] = {"the", "a", "there", "answer", "any", "by", "bye", "their", "she", "sells", "sea", "shore", "the", "sheer"};
-    struct node* t = getNode(); //dummy first node of trie
+    struct node* root = getNode(); //dummy root node of trie
     for (int i=0; i<sizeof(keys)/sizeof(keys[0]); i++)
-        insertTrie(t, keys[i]);
-    cout<<"Key \'th\': "<<(searchTrie(t, "th")?"Found":"Not found")<<endl;
-    cout<<"Key \'the\': "<<(searchTrie(t, "the")?"Found":"Not found")<<endl;
-    cout<<"Key \'their\': "<<(searchTrie(t, "their")?"Found":"Not found")<<endl;
-    cout<<"Key \'she\': "<<(searchTrie(t, "she")?"Found":"Not found")<<endl;
-    cout<<"Key \'sh\': "<<(searchTrie(t, "sh")?"Found":"Not found")<<endl;
-    cout<<"Key \'sho\': "<<(searchTrie(t, "sho")?"Found":"Not found")<<endl;
-    deleteTrie(t, "the");
-    cout<<"Key \'th\': "<<(searchTrie(t, "th")?"Found":"Not found")<<endl;
-    cout<<"Key \'the\': "<<(searchTrie(t, "the")?"Found":"Not found")<<endl;
-    cout<<"Key \'their\': "<<(searchTrie(t, "their")?"Found":"Not found")<<endl;
-    cout<<"Key \'by\': "<<(searchTrie(t, "by")?"Found":"Not found")<<endl;
-    cout<<"Key \'bye\': "<<(searchTrie(t, "bye")?"Found":"Not found")<<endl;
-    cout<<"Key \'byo\': "<<(searchTrie(t, "byo")?"Found":"Not found")<<endl;
+        insertTrie(root, keys[i]);
+    cout<<"Key \'th\': "<<(searchTrie(root, "th")?"Found":"Not found")<<endl;
+    cout<<"Key \'the\': "<<(searchTrie(root, "the")?"Found":"Not found")<<endl;
+    cout<<"Key \'their\': "<<(searchTrie(root, "their")?"Found":"Not found")<<endl;
+    cout<<"Key \'she\': "<<(searchTrie(root, "she")?"Found":"Not found")<<endl;
+    cout<<"Key \'sh\': "<<(searchTrie(root, "sh")?"Found":"Not found")<<endl;
+    cout<<"Key \'sho\': "<<(searchTrie(root, "sho")?"Found":"Not found")<<endl;
+    deleteTrie(root, "the");
+    cout<<"Key \'th\': "<<(searchTrie(root, "th")?"Found":"Not found")<<endl;
+    cout<<"Key \'the\': "<<(searchTrie(root, "the")?"Found":"Not found")<<endl;
+    cout<<"Key \'their\': "<<(searchTrie(root, "their")?"Found":"Not found")<<endl;
+    cout<<"Key \'by\': "<<(searchTrie(root, "by")?"Found":"Not found")<<endl;
+    cout<<"Key \'bye\': "<<(searchTrie(root, "bye")?"Found":"Not found")<<endl;
+    cout<<"Key \'byo\': "<<(searchTrie(root, "byo")?"Found":"Not found")<<endl;
     return 0;
 }
