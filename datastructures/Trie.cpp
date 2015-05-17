@@ -1,4 +1,4 @@
-// Trie or Digital Tree or Prefix Tree
+//Trie or Digital Tree or Prefix Tree
 #include<iostream>
 #include<cstdlib>
 #include<cstring>
