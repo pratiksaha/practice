@@ -14,11 +14,6 @@ struct node {
     int value; //non-zero for leaf node
 };
 
-struct trie {
-    struct node* data;
-    int count; //no of keys
-};
-
 struct node* getNode() {
     struct node* temp = (struct node *)malloc(sizeof(struct node));
     assert(temp); //just in case malloc fails
@@ -39,22 +34,16 @@ bool checkDelete(struct node* curr) { //check if curr can be deleted
     return true; //curr can be deleted if all its children are NULL
 }
 
-void Trie(struct trie* root) {
-    root->data = getNode();
-    root->count = 0; //root node of trie is always dummy
-}
-
-void insertTrie(struct trie* root, char* key) {
+void insertTrie(struct node* root, char* key) {
     int len = strlen(key);
-    struct node* temp = root->data;
+    struct node* temp = root;
     for (int level=0; level<len; level++) {
         int idx = CHAR_TO_INDEX(key[level]);
         if (!temp->children[idx]) //add a new child only if it is not yet seen
             temp->children[idx] = getNode();
         temp = temp->children[idx]; //move to the child for next iteration
     }
-    root->count++; //update no of keys in trie
-    temp->value = root->count; //can be any non-zero value to indicate leaf node
+    temp->value = 1; //can be any non-zero value to indicate leaf node
 }
 
 bool deleteTrie(struct node* curr, char* key, int level, int len) {
@@ -84,15 +73,15 @@ bool deleteTrie(struct node* curr, char* key, int level, int len) {
     }
 }
 
-void deleteTrie(struct trie* root, char* key) {
+void deleteTrie(struct node* root, char* key) {
     int n = strlen(key);
     if (n>0)
-        deleteTrie(root->data, key, 0, n);
+        deleteTrie(root, key, 0, n);
 }
 
-bool searchTrie(struct trie* root, char* key) {
+bool searchTrie(struct node* root, char* key) {
     int len = strlen(key);
-    struct node* temp = root->data;
+    struct node* temp = root;
     for (int level=0; level<len; level++) {
         int idx = CHAR_TO_INDEX(key[level]);
         if (!temp->children[idx]) //child for the alphabet is NULL means key is not present
@@ -104,19 +93,21 @@ bool searchTrie(struct trie* root, char* key) {
 
 int main() {
     char* keys[] = {"the", "a", "there", "answer", "any", "by", "bye", "their", "she", "sells", "sea", "shore", "the", "sheer"};
-    struct trie t;
-    Trie(&t);
+    struct node* t = getNode(); //dummy first node of trie
     for (int i=0; i<sizeof(keys)/sizeof(keys[0]); i++)
-        insertTrie(&t, keys[i]);
-    cout<<"Key \'th\': "<<(searchTrie(&t, "th")?"Found":"Not found")<<endl;
-    cout<<"Key \'the\': "<<(searchTrie(&t, "the")?"Found":"Not found")<<endl;
-    cout<<"Key \'their\': "<<(searchTrie(&t, "their")?"Found":"Not found")<<endl;
-    cout<<"Key \'she\': "<<(searchTrie(&t, "she")?"Found":"Not found")<<endl;
-    cout<<"Key \'sh\': "<<(searchTrie(&t, "sh")?"Found":"Not found")<<endl;
-    cout<<"Key \'sho\': "<<(searchTrie(&t, "sho")?"Found":"Not found")<<endl;
-    deleteTrie(&t, "the");
-    cout<<"Key \'th\': "<<(searchTrie(&t, "th")?"Found":"Not found")<<endl;
-    cout<<"Key \'the\': "<<(searchTrie(&t, "the")?"Found":"Not found")<<endl;
-    cout<<"Key \'their\': "<<(searchTrie(&t, "their")?"Found":"Not found")<<endl;
+        insertTrie(t, keys[i]);
+    cout<<"Key \'th\': "<<(searchTrie(t, "th")?"Found":"Not found")<<endl;
+    cout<<"Key \'the\': "<<(searchTrie(t, "the")?"Found":"Not found")<<endl;
+    cout<<"Key \'their\': "<<(searchTrie(t, "their")?"Found":"Not found")<<endl;
+    cout<<"Key \'she\': "<<(searchTrie(t, "she")?"Found":"Not found")<<endl;
+    cout<<"Key \'sh\': "<<(searchTrie(t, "sh")?"Found":"Not found")<<endl;
+    cout<<"Key \'sho\': "<<(searchTrie(t, "sho")?"Found":"Not found")<<endl;
+    deleteTrie(t, "the");
+    cout<<"Key \'th\': "<<(searchTrie(t, "th")?"Found":"Not found")<<endl;
+    cout<<"Key \'the\': "<<(searchTrie(t, "the")?"Found":"Not found")<<endl;
+    cout<<"Key \'their\': "<<(searchTrie(t, "their")?"Found":"Not found")<<endl;
+    cout<<"Key \'by\': "<<(searchTrie(t, "by")?"Found":"Not found")<<endl;
+    cout<<"Key \'bye\': "<<(searchTrie(t, "bye")?"Found":"Not found")<<endl;
+    cout<<"Key \'byo\': "<<(searchTrie(t, "byo")?"Found":"Not found")<<endl;
     return 0;
 }
