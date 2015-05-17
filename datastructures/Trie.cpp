@@ -22,35 +22,34 @@ struct node* getNode() {
     return temp;
 }
 
-bool checkLeaf(struct node* curr) { //check if curr is a leaf node
-    return (curr->value != 0); //curr is leaf if value is non zero
+bool checkLeaf(struct node* node) { //check if node is a leaf node
+    return (node->value != 0); //node is leaf if value is non zero
 }
 
-bool checkDelete(struct node* curr) { //check if curr can be deleted
+bool checkDelete(struct node* node) { //check if node can be deleted
     for (int i=0; i<ALPHABET_SIZE; i++)
-        if (curr->children[i])
+        if (node->children[i])
             return false;
-    return true; //curr can be deleted if all its children are NULL
+    return true; //node can be deleted if all its children are NULL
 }
 
-void insertTrie(struct node* root, char* key) {
+void insertTrie(struct node* node, char* key) {
     int len = strlen(key);
-    struct node* temp = root;
     for (int level=0; level<len; level++) {
         int idx = CHAR_TO_INDEX(key[level]);
-        if (!temp->children[idx]) //add a new child only if it is not yet seen
-            temp->children[idx] = getNode();
-        temp = temp->children[idx]; //move to the child for next iteration
+        if (!node->children[idx]) //add a new child only if it is not yet seen
+            node->children[idx] = getNode();
+        node = node->children[idx]; //move to the child for next iteration
     }
-    temp->value = 1; //can be any non-zero value to indicate leaf node
+    node->value = 1; //can be any non-zero value to indicate leaf node
 }
 
-bool deleteTrie(struct node* curr, char* key, int level, int len) {
-    if (curr) {
+bool deleteTrie(struct node* node, char* key, int level, int len) {
+    if (node) {
         if (level==len) { //we have found the leaf node of the key in trie
-            if (curr->value) { //if it is actually a leaf node 
-                curr->value = 0; //mark as internal node
-                if (checkDelete(curr))
+            if (node->value) { //if it is actually a leaf node 
+                node->value = 0; //mark as internal node
+                if (checkDelete(node))
                     return true;
                 else
                     return false;
@@ -59,10 +58,10 @@ bool deleteTrie(struct node* curr, char* key, int level, int len) {
             }
         } else {
             int idx = CHAR_TO_INDEX(key[level]);
-            if (deleteTrie(curr->children[idx], key, level+1, len)){
-                free(curr->children[idx]); //free the memory
-                curr->children[idx] = NULL; //mark as NUll
-                return (!checkLeaf(curr) && checkDelete(curr)); //recursively delete if curr is not leaf and can be deleted
+            if (deleteTrie(node->children[idx], key, level+1, len)){
+                free(node->children[idx]); //free the memory
+                node->children[idx] = NULL; //mark as NUll
+                return (!checkLeaf(node) && checkDelete(node)); //recursively delete if node is not leaf and can be deleted
             } else {
                 return false;
             }
@@ -72,22 +71,21 @@ bool deleteTrie(struct node* curr, char* key, int level, int len) {
     }
 }
 
-void deleteTrie(struct node* root, char* key) {
+void deleteTrie(struct node* node, char* key) {
     int n = strlen(key);
     if (n>0)
-        deleteTrie(root, key, 0, n);
+        deleteTrie(node, key, 0, n);
 }
 
-bool searchTrie(struct node* root, char* key) {
+bool searchTrie(struct node* node, char* key) {
     int len = strlen(key);
-    struct node* temp = root;
     for (int level=0; level<len; level++) {
         int idx = CHAR_TO_INDEX(key[level]);
-        if (!temp->children[idx]) //child for the alphabet is NULL means key is not present
+        if (!node->children[idx]) //child for the alphabet is NULL means key is not present
             return false;
-        temp = temp->children[idx]; //move to the child for next iteration
+        node = node->children[idx]; //move to the child for next iteration
     }
-    return (temp && (temp->value != 0)); //key is present if temp is not NULL and is a leaf node
+    return (node && (node->value != 0)); //key is present if node is not NULL and is a leaf node
 }
 
 int main() {
