@@ -1,7 +1,7 @@
 //datastructure with insert delete search and getrandom in theta(1)
 //Using features of C++ Standard (2011) Compile using g++ -std=c++11
 #include<iostream>
-#include<unordered_map>
+#include<unordered_set>
 #include<cstdlib>
 #include<ctime>
 #include<unistd.h> //only on unix used for usleep while getting random number
@@ -10,7 +10,7 @@ using namespace std;
 template <class T>
 class DS {
 private:
-    unordered_map<T, int> elem;
+    unordered_set<T> elem;
 public:
     void insertDS(T);
     void deleteDS(T);
@@ -21,17 +21,17 @@ public:
 
 template <class T>
 void DS<T>:: insertDS(T key) {
-    typename unordered_map<T, int>::iterator it = elem.find(key);
+    typename unordered_set<T>::iterator it = elem.find(key);
     if (it != elem.end()) {
         cout<<key<<" is already present in data structure\n";
     } else {
-        elem.insert(make_pair(key, 1));   
+        elem.insert(key);
     }
 }
 
 template <class T>
 void DS<T>:: deleteDS(T key) {
-    typename unordered_map<T, int>::iterator it = elem.find(key);
+    typename unordered_set<T>::iterator it = elem.find(key);
     if (it != elem.end()) {
         elem.erase(key);
     } else {
@@ -41,9 +41,9 @@ void DS<T>:: deleteDS(T key) {
 
 template <class T>
 T DS<T>:: searchDS(T key) {
-    typename unordered_map<T, int>::iterator it = elem.find(key);
+    typename unordered_set<T>::iterator it = elem.find(key);
     if (it != elem.end()) {
-        return it->first;
+        return *it;
     } else {
         return NULL;  
     }
@@ -51,19 +51,19 @@ T DS<T>:: searchDS(T key) {
 
 template <class T>
 T DS<T>:: getRandomDS() {
-    typename unordered_map<T, int>::iterator it = elem.begin();
+    typename unordered_set<T>::iterator it = elem.begin();
     srand(time(0));
     int i = rand()%(elem.size());
     advance(it, i);
     usleep(2000000); //sleep for 2 seconds
-    return it->first;
+    return *it;
 }
 
 template <class T>
 void DS<T>:: printDS() {
     cout<<"Contents :";
-    for (typename unordered_map<T, int>::iterator it = elem.begin(); it != elem.end(); it++)
-        cout<<" "<<it->first;
+    for (typename unordered_set<T>::iterator it = elem.begin(); it != elem.end(); it++)
+        cout<<" "<<*it;
     cout<<endl;
 }
 
