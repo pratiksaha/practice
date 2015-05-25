@@ -13,7 +13,7 @@ bool myComp(Job s1, Job s2) { //used by sort()
 }
 
 int latestNonConflictJob(Job arr[], int i) { //find the latest job that doesn't conflict with the job[i]
-    for (int j=i-1; j>=0; j--) //todo: use binary search
+    for (int j=i-1; j>=0; j--) //TODO: use binary search
         if (arr[j].finish <= arr[i].start)
             return j;
     return -1;
