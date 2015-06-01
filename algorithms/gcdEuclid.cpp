@@ -31,6 +31,20 @@ int Euclid(int m, int n) {//gcd of -ve nos is same as that of +ve nos
     return m;
 }
 
+int gcdExtended(int a, int b, int *x, int *y) { //ax + by = gcd(a, b)
+    if (a == 0) {
+        *x = 0;
+        *y = 1;
+        return b;
+    } else {
+        int x1, y1;
+        int gcd = gcdExtended(b%a, a, &x1, &y1);
+        *x = y1-(b/a)*x1;
+        *y = x1;
+        return gcd;
+    }
+}
+
 int main() {
     int a=54, b=24;
     int gcd = Euclid(a, b);
@@ -43,5 +57,9 @@ int main() {
         cout<<abs(a*b)/gcd;
     }
     cout<<endl;
+    int x, y;
+    int m = 35, n = 15;
+    int g = gcdExtended(m, n, &x, &y);
+    cout<<"gcd("<<m<<","<<n<<") = "<<g<<" = "<<x<<"*"<<m<<" + "<<y<<"*"<<n<<endl;
     return 0;
 }
