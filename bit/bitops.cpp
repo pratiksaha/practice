@@ -77,6 +77,10 @@ int subtract(int x, int y) {
     return x;
 }
 
+int multiplyBySevenByEight(int n) { //calculate 7n/8
+    return (n-(n>>3));
+}
+
 int main(){
     cout<<"Swapping bits 0 and 3 in 28 is "<<swapBits(28,0,3,2)<<endl;
     cout<<"Left rotate of 16 by 2 is "<<leftRotate(16,2)<<endl;
@@ -86,5 +90,6 @@ int main(){
     cout<<"Swapping nibbles of 100 is "<<swapNibbles('d')<<endl;
     cout<<"11+6 = "<<add(11, 6)<<endl;
     cout<<"11-6 = "<<subtract(11, 6)<<endl;
+    cout<<"7n/8 when n is 16 = "<<multiplyBySevenByEight(16)<<endl;
     return 0;
 }
