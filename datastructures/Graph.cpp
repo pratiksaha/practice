@@ -25,6 +25,7 @@ public:
 class Graph {
 private:
     vector<Node> nodes;
+    void topologicalSort(int , bool*, stack<int>*);
 public:
     Graph();
     ~Graph();
@@ -141,28 +142,61 @@ void Graph::breadthFirstTraversal(int v) {
     }
     cout<<endl;
 }
+void Graph::topologicalSort(int i, bool *visited, stack<int> *tsort) {
+    visited[i] = true;
+    for (list<int>::iterator it = nodes[i].adj.begin(); it != nodes[i].adj.end(); it++)
+        if (!visited[*it])
+            topologicalSort(*it, visited,tsort);
+    tsort->push(i);
+}
 
 void Graph::topologicalSort() {
-
+    bool *visited = new bool[nodes.size()];
+    for (int i=0; i<nodes.size(); i++)
+        visited[i] = false;
+    stack<int> tsort;
+    for (int i=0; i<nodes.size(); i++)
+        if(!visited[i])
+            topologicalSort(i, visited, &tsort);
+    cout<<"Topological Sort :";
+    while(!tsort.empty()) {
+        cout<<" "<<tsort.top();
+        tsort.pop();
+    }
+    cout<<endl;
 }
 
 int main () {
-    Graph G;
-    G.addVertex(1);
-    G.addVertex(0);
-    G.addVertex(1);
-    G.addVertex(1);
-    G.addVertex(2);
-    G.addVertex(3);
-    G.printGraph();
-    G.addEdge(0, 1);
-    G.addEdge(0, 2);
-    G.addEdge(1, 2);
-    G.addEdge(2, 0);
-    G.addEdge(2, 3);
-    G.addEdge(3, 3);
-    G.printGraph();
-    G.breadthFirstTraversal(2);
-    G.depthFirstTraversal(2);
+    Graph g1;
+    g1.addVertex(1);
+    g1.addVertex(0);
+    g1.addVertex(1);
+    g1.addVertex(1);
+    g1.addVertex(2);
+    g1.addVertex(3);
+    g1.addEdge(0, 1);
+    g1.addEdge(0, 2);
+    g1.addEdge(1, 2);
+    g1.addEdge(2, 0);
+    g1.addEdge(2, 3);
+    g1.addEdge(3, 3);
+    g1.printGraph();
+    g1.breadthFirstTraversal(2);
+    g1.depthFirstTraversal(2);
+    Graph g2;
+    g2.addVertex(0);
+    g2.addVertex(1);
+    g2.addVertex(2);
+    g2.addVertex(3);
+    g2.addVertex(4);
+    g2.addVertex(5);
+    g2.addEdge(5, 2);
+    g2.addEdge(5, 0);
+    g2.addEdge(4, 0);
+    g2.addEdge(4, 1);
+    g2.addEdge(2, 3);
+    g2.addEdge(3, 1);
+    g2.printGraph();
+    g2.topologicalSort();
     return 0;
 }
