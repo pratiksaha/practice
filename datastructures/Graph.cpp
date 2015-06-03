@@ -33,8 +33,8 @@ public:
     void addEdge(int, int);
     void removeEdge(int, int);
     void printGraph();
-    void depthFirstTraversal();
-    void breadthFirstTraversal();
+    void depthFirstTraversal(int);
+    void breadthFirstTraversal(int);
     void topologicalSort();
 };
 
@@ -100,49 +100,43 @@ void Graph::removeEdge(int u, int v) {
 
 }
 
-void Graph::depthFirstTraversal() {
+void Graph::depthFirstTraversal(int v) {
     bool *visited = new bool[nodes.size()];
     for (int i=0; i<nodes.size(); i++)
         visited[i] = false;
     cout<<"DFS :";
-    for (int i=0; i<nodes.size(); i++) {
-        if(!visited[i]) {
-            stack<int> t;
-            t.push(i);
-            while(!t.empty()) {
-                int curr = t.top();
-                t.pop();
-                visited[curr] = true;
-                cout<<" "<<curr;
-                for (list<int>::iterator it = nodes[curr].adj.begin(); it != nodes[curr].adj.end(); it++)
-                    if(!visited[*it])
-                        t.push(*it);
-            }
+    stack<int> t;
+    t.push(v);
+    while(!t.empty()) {
+        int curr = t.top();
+        t.pop();
+        if(!visited[curr]) {
+            visited[curr] = true;
+            cout<<" "<<curr;
+            for (list<int>::iterator it = nodes[curr].adj.begin(); it != nodes[curr].adj.end(); it++)
+                if(!visited[*it])
+                    t.push(*it);
         }
     }
     cout<<endl;
 }
 
-void Graph::breadthFirstTraversal() {
+void Graph::breadthFirstTraversal(int v) {
     bool *visited = new bool[nodes.size()];
     for (int i=0; i<nodes.size(); i++)
         visited[i] = false;
     cout<<"BFS :";
-    for (int i=0; i<nodes.size(); i++) {
-        if(!visited[i]) {
-            queue<int> t;
-            t.push(i);
-            while(!t.empty()) {
-                int curr = t.front();
-                t.pop();
-                if(!visited[curr]) {
-                    cout<<" "<<curr;
-                    visited[curr] = true;
-                    for (list<int>::iterator it = nodes[curr].adj.begin(); it != nodes[curr].adj.end(); it++)
-                        if(!visited[*it])
-                            t.push(*it);
-                }
-            }
+    queue<int> t;
+    t.push(v);
+    while(!t.empty()) {
+        int curr = t.front();
+        t.pop();
+        if(!visited[curr]) {
+            cout<<" "<<curr;
+            visited[curr] = true;
+            for (list<int>::iterator it = nodes[curr].adj.begin(); it != nodes[curr].adj.end(); it++)
+                if(!visited[*it])
+                    t.push(*it);
         }
     }
     cout<<endl;
@@ -168,7 +162,7 @@ int main () {
     G.addEdge(2, 3);
     G.addEdge(3, 3);
     G.printGraph();
-    G.breadthFirstTraversal();
-    G.depthFirstTraversal();
+    G.breadthFirstTraversal(2);
+    G.depthFirstTraversal(2);
     return 0;
 }
