@@ -72,7 +72,16 @@ void Graph::addVertex(int v) {
 }
 
 void Graph::removeVertex(int v) {
-
+    for (vector<Node>::iterator itv = nodes.begin(); itv != nodes.end(); itv++) {
+        if (itv->valid) {
+            if (itv - nodes.begin() == v) {
+                itv->adj.clear();
+                itv->valid = false;
+            } else {
+                removeEdge(itv->vertex, v);
+            }
+        }
+    }
 }
 
 void Graph::addEdge(int u, int v) {
@@ -98,7 +107,16 @@ void Graph::addEdge(int u, int v) {
 }
 
 void Graph::removeEdge(int u, int v) {
-
+    for (vector<Node>::iterator itv = nodes.begin(); itv != nodes.end(); itv++) {
+        if (u == itv - nodes.begin() ) {
+            for (list<int>::iterator itl = itv->adj.begin(); itl != itv->adj.end(); itl++) {
+                if (*itl == v) {
+                    itv->adj.erase(itl);
+                    return;
+                }
+            }
+        }
+    }
 }
 
 void Graph::depthFirstTraversal(int v) {
@@ -156,7 +174,7 @@ void Graph::topologicalSort() {
         visited[i] = false;
     stack<int> tsort;
     for (int i=0; i<nodes.size(); i++)
-        if(!visited[i])
+        if(!visited[i] && nodes[i].valid)
             topologicalSort(i, visited, &tsort);
     cout<<"Topological Sort :";
     while(!tsort.empty()) {
@@ -183,6 +201,10 @@ int main () {
     g1.printGraph();
     g1.breadthFirstTraversal(2);
     g1.depthFirstTraversal(2);
+    g1.removeEdge(1,2);
+    g1.printGraph();
+    g1.removeVertex(3);
+    g1.printGraph();
     Graph g2;
     g2.addVertex(0);
     g2.addVertex(1);
