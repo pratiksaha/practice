@@ -5,6 +5,7 @@
 using namespace std;
 
 class Graph {
+private:
     int V;
     list<int> *adj;
     void sccTarjan(int, int*, stack<int>*, int*, int*, bool*);
