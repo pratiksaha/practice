@@ -22,7 +22,7 @@ Graph:: Graph(int V) {
     adj = new list<int>[V];
 }
 
-void Graph::addEdge(int v, int w) {
+void Graph:: addEdge(int v, int w) {
     adj[v].push_back(w);
 }
 
@@ -42,7 +42,7 @@ Graph Graph:: getTranspose() {
     return g;
 }
  
-void Graph::fillOrder(int v, bool* visited, stack<int>* st) {
+void Graph:: fillOrder(int v, bool* visited, stack<int>* st) {
     visited[v] = true;
     for(list<int>::iterator it=adj[v].begin(); it!=adj[v].end(); it++)
         if(!visited[*it])
@@ -50,7 +50,7 @@ void Graph::fillOrder(int v, bool* visited, stack<int>* st) {
     st->push(v); //push v to stack after v is finsed expanding in DFS
 }
 
-void Graph::sccKosaraju() {
+void Graph:: sccKosaraju() {
     stack<int> st;
     bool *visited = new bool[V];
     for(int i=0; i<V; i++)
@@ -79,7 +79,7 @@ int main() {
     g.addEdge(2, 1);
     g.addEdge(0, 3);
     g.addEdge(3, 4);
-    cout << "Strongly Connected Components in given graph :\n";
+    cout<<"Strongly Connected Components in given graph :\n";
     g.sccKosaraju();
     return 0;
 }
