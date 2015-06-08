@@ -7,11 +7,13 @@
 using namespace std;
 
 class Graph {
+private:
     int V;
     list<int> *adj;
     void bccHopcroftTarjan(int, int*, int*, int*, int*, int*, stack<tuple <int, int> >*);
 public:
     Graph(int);
+    ~Graph();
     void addEdge(int, int);
     int bccHopcroftTarjan();
 };
@@ -19,6 +21,10 @@ public:
 Graph:: Graph(int V) {
     this->V = V;
     adj = new list<int>[V];
+}
+
+Graph:: ~Graph() {
+    delete[] adj;
 }
    
 void Graph:: addEdge(int v, int w) {
@@ -56,7 +62,7 @@ void Graph:: bccHopcroftTarjan(int u, int* disc, int* low, int* parent, int* tim
     }
 }
 
-int Graph::bccHopcroftTarjan() {
+int Graph:: bccHopcroftTarjan() {
     int *parent = new int[V]; //parents of current vertex
     int *disc = new int[V]; //discovery times of visited vertices
     int *low = new int[V]; //earliest visited vertex (the vertex with minimum discovery time) that can be reached from subtree rooted with current vertex
@@ -83,6 +89,9 @@ int Graph::bccHopcroftTarjan() {
             count++;
         }
     }
+    delete[] parent;
+    delete[] disc;
+    delete[] low;
     return count;
 }
 

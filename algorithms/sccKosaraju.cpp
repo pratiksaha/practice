@@ -12,6 +12,7 @@ private:
     void fillOrder(int, bool*, stack<int>*);
 public:
     Graph(int);
+    ~Graph();
     void addEdge(int, int);
     Graph getTranspose();
     void sccKosaraju();
@@ -20,6 +21,10 @@ public:
 Graph:: Graph(int V) {
     this->V = V;
     adj = new list<int>[V];
+}
+
+Graph:: ~Graph() {
+    delete[] adj;
 }
 
 void Graph:: addEdge(int v, int w) {

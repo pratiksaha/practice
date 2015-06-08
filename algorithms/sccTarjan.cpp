@@ -10,6 +10,7 @@ class Graph {
     void sccTarjan(int, int*, stack<int>*, int*, int*, bool*);
 public:
     Graph(int);
+    ~Graph();
     void addEdge(int, int);
     void sccTarjan();
 };
@@ -17,6 +18,10 @@ public:
 Graph:: Graph(int V) {
     this->V = V;
     adj = new list<int>[V];
+}
+
+Graph:: ~Graph() {
+    delete[] adj;
 }
  
 void Graph:: addEdge(int v, int w) {
