@@ -146,7 +146,7 @@ void Graph:: eulerPathFleury() {
     }
     eulerPathFleury(u);
     cout<<endl;
-}   
+}
 
 int main() {
 
