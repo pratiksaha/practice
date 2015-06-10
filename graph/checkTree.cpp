@@ -43,7 +43,7 @@ bool Graph:: isCyclic(int v, bool* visited, int parent) {
 }
 
 bool Graph:: isTree() {
-    bool *visited = new bool[V];
+    bool visited[V];
     for (int i=0; i<V; i++)
         visited[i] = false;       
     if (isCyclic(0, visited, -1))
