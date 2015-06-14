@@ -2,9 +2,7 @@
 # include<iostream>
 using namespace std;
 
-     
- 
-void printParentheses(int pos, int n, int open, int close, char* str) {   
+void printParentheses(int pos, int n, int open, int close, char* str) { 
     if(close == n) {
         str[pos] = '\0';
         cout<<str<<endl;
@@ -25,7 +23,6 @@ void printParentheses(int n) {
         char str[2*n+1];
         printParentheses(0, n, 0, 0, str);
     }
-    
 }
 
 int main() {
