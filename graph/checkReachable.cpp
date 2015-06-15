@@ -8,10 +8,10 @@ private:
     int V;
     list<int> *adj;
 public:
-    Graph(int V);
+    Graph(int);
     ~Graph();
-    void addEdge(int v, int w);
-    bool checkReachable(int s, int d);
+    void addEdge(int, int);
+    bool checkReachable(int, int);
 };
  
 Graph:: Graph(int V) {
