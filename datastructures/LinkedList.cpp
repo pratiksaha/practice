@@ -208,6 +208,19 @@ void reverse(struct node **head) { //reverse a list
     *head = prev;
 }
 
+void reverseRec(struct node **head) { //reverse a list recursively
+    if (*head) {
+        struct node* first = *head;
+        struct node* rest = first->next;
+        if (rest) {
+            reverseRec(&rest);
+            first->next->next = first;
+            first->next = NULL;
+            *head = rest;
+        }
+    }
+}
+
 void rotateCounterClockwise(struct node **head, int k) { //rotate a list k times in Counter Clockwise direction
     if (k == 0 || k>getSize(*head))
         return;
@@ -302,6 +315,8 @@ int main() {
     pop_at(&l, 2);
     printList(l);
     reverse(&l);
+    printList(l);
+    reverseRec(&l);
     printList(l);
     rotateCounterClockwise(&l, 2);
     printList(l);
