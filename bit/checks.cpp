@@ -65,6 +65,17 @@ int getParity(int n)
     return parity;
 }
 
+bool isMultipleof5(int n) {
+    if ( (n&1) == 1 )
+        n<<= 1; 
+    float x = n;
+    x = ((int)(x*0.1))*10;
+    if ( (int)x == n )
+        return true;
+ 
+    return false;
+}
+
 int main(){
     int no;
     no = 64;
@@ -87,5 +98,11 @@ int main(){
     cout<<no<<(getParity(no)?" is odd parity":" is even parity")<<endl;
     no = 6;
     cout<<no<<(getParity(no)?" is odd parity":" is even parity")<<endl;
+    no = 28;
+    cout<<no<<(isMultipleof5(no)?" is multiple of 5":" is not a multiple of 5")<<endl;
+    no = 15;
+    cout<<no<<(isMultipleof5(no)?" is multiple of 5":" is not a multiple of 5")<<endl;
+    no = 20;
+    cout<<no<<(isMultipleof5(no)?" is multiple of 5":" is not a multiple of 5")<<endl;
     return 0;
 }
