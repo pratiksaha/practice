@@ -40,6 +40,26 @@ int singleSetBitPos(int n)
     return Log2n(n) + 1;
 }
 
+int countSetBitsChar(char n) {
+    int count = 0;
+    while (n) {
+        n &= (n-1);
+        count++;
+    }
+    return count;
+}
+
+int countSetBitsFloat(float x) {
+    int n = sizeof(float)/sizeof(char);
+    char *ptr = (char *)&x;
+    int count = 0;
+    for (int i=0; i<n; i++) {
+         count += countSetBitsChar(*ptr);
+         ptr++;
+    }
+    return count;
+}
+
 int main(){
     cout<<"First set bit of 12 = "<<getFirstSetBitPos(12)<<endl;
     cout<<"Turning off first set bit of 12 = "<<turnOffFirstSetBit(12)<<endl;
@@ -58,5 +78,7 @@ int main(){
     num = 9;
     pos = singleSetBitPos(num);
     (pos == -1)? cout<<"Invalid no "<<num<<endl: cout<<"Only set bit for "<<num<<" = "<< pos<<endl;
+    float x = 0.15625;
+    cout<<"No of set bits in "<<x<<" = "<<countSetBitsFloat(x)<<endl;
     return 0;
 }
