@@ -81,6 +81,13 @@ int multiplyBySevenByEight(int n) { //calculate 7n/8
     return (n-(n>>3));
 }
 
+int turnOffK(int n, int k) { //turn off kth bit in n
+    if (k <= 0)
+        return n;
+    else
+        return (n & ~(1 << (k - 1)));
+}
+
 int main(){
     cout<<"Swapping bits 0 and 3 in 28 is "<<swapBits(28,0,3,2)<<endl;
     cout<<"Left rotate of 16 by 2 is "<<leftRotate(16,2)<<endl;
@@ -91,5 +98,6 @@ int main(){
     cout<<"11+6 = "<<add(11, 6)<<endl;
     cout<<"11-6 = "<<subtract(11, 6)<<endl;
     cout<<"7n/8 when n is 16 = "<<multiplyBySevenByEight(16)<<endl;
+    cout<<"Turning off 4th bit in 15 = "<<turnOffK(15, 4)<<endl;
     return 0;
 }
