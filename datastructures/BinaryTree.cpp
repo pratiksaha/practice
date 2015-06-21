@@ -591,6 +591,21 @@ bool isCousin(struct node *node, struct node *key1, struct node *key2) {//check 
         return false;
 }
 
+void printSingles(struct node *node) { //print nodes that do not have a sibling
+    if (node) {
+        if (node->left && node->right) { //internal node recur for left and right sub tree
+            printSingles(node->left);
+            printSingles(node->right);
+        } else if (node->left) { //print left child and recur
+            cout<<" "<<node->left->data;
+            printSingles(node->left);
+        } else if (node->right) { //print right child and recur
+            cout<<" "<<node->right->data;
+            printSingles(node->right);
+        }
+    }
+}
+
 bool checkAllLeavesSameLevel(struct node *node, int *leaflvl, int lvl=0) {//check if all leaves are at the same level
     if(node==NULL) {
         return true;
@@ -1195,6 +1210,7 @@ int main() {
     cout<<"Check Sibling : "<<isSibling(t, t->left, t->right->right)<<endl;
     cout<<"Check Cousin : "<<isCousin(t, t->left, t->right)<<endl;
     cout<<"Check Cousin : "<<isCousin(t, t->left->right, t->right->right)<<endl;
+    cout<<"Nodes with no siblings :", printSingles(t), cout<<endl;
     int temp = 0;
     cout<<"Check all leaves same level : "<<checkAllLeavesSameLevel(t, &temp)<<endl;
     cout<<"Max Width : "<<getMaxWidth(t)<<endl;
