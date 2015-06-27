@@ -1,11 +1,37 @@
-//Find no of possible numbers for given length
+//Find no of possible numbers for given length and all possible chars for given nos
 #include<iostream>
+#include<cstring>
 using namespace std;
 
 char keypad[4][3]= {{'1','2','3'},
                     {'4','5','6'},
                     {'7','8','9'},
                     {'*','0','#'}};
+char hashTable[10][5] = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+
+void  printWords(int number[], char result[], int curr, int n) {
+    if (curr == n) {
+        cout<<" "<<result;
+    } else { //try all 3 possibilities and recur
+        for (int i=0; i<strlen(hashTable[number[curr]]); i++) {
+            result[curr] = hashTable[number[curr]][i];
+            printWords(number, result, curr+1, n);
+            if (number[curr]==0 || number[curr]==1)
+                return;
+        }
+    }
+}
+
+void printWords(int number[], int n) {
+    cout<<"All possible words with \"";
+    for (int i=0; i<n; i++)
+        cout<<number[i];
+    cout<<"\" are :";
+    char result[n+1];
+    result[n] ='\0';
+    printWords(number, result, 0, n);
+    cout<<endl;
+}
 
 int getCount(int n) {
     if(n <= 0)
@@ -69,5 +95,7 @@ int main() {
     cout<<"Count for numbers of length 8 : "<<getCount(8)<<endl;
     cout<<"Count for numbers of length 9 : "<<getCount(9)<<endl;
     cout<<"Count for numbers of length 10 : "<<getCount(10)<<endl;
+    int number[] = {2, 3, 4};
+    printWords(number, sizeof(number)/sizeof(number[0]));
     return 0;
 }
