@@ -1,4 +1,4 @@
-//to multiply two polynomials
+//to multiply two polynomials : revisit
 #include<iostream>
 using namespace std;
 
