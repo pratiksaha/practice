@@ -1,5 +1,5 @@
 //to find sum of all subsquares of size k
-#include <iostream>
+#include<iostream>
 using namespace std;
 #define N 5
 
@@ -26,7 +26,7 @@ void sumSquareK(int mat[N][N], int k) {
             sum += (stripSum[i][j+k-1] - stripSum[i][j-1]);
             cout<<" "<<sum;
         }
-        cout << endl;
+        cout<<endl;
     }
 }
 
