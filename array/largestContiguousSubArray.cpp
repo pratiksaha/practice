@@ -1,4 +1,4 @@
-//find the largest contiguous subarray
+//find the largest contiguous subarray (revisit for duplicates)
 #include<iostream>
 #include<cstdlib>
 #include<algorithm>
