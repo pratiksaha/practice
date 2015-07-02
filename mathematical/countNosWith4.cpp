@@ -23,6 +23,6 @@ int countNosWith4(int n) {
 
 int main() {
     int n = 328;
-    cout<<"Count of numbers from 1 to "<<n<<" that have 4 as a a digit is "<<countNosWith4(n)<<endl;
-   return 0;
+    cout<<"Count of numbers from 1 to "<<n<<" that have 4 as a digit is "<<countNosWith4(n)<<endl;
+    return 0;
 }
