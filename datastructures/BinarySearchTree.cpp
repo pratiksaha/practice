@@ -166,6 +166,40 @@ void inorderPreSuc(struct node *node, struct node *key, struct node **pre, struc
     }
 }
 
+int countNodeRange(struct node* node, int minKey=INT_MIN, int maxKey=INT_MAX) { //count nodes within range
+    if (node) {
+        if (node->data <= maxKey && node->data >= minKey)
+            return 1 + countNodeRange(node->left, minKey, maxKey) + countNodeRange(node->right, minKey, maxKey);
+        else if (node->data < minKey)
+            return countNodeRange(node->right, minKey, maxKey);
+        else
+            return countNodeRange(node->left, minKey, maxKey);
+    } else {
+        return 0;
+    }
+}
+
+bool countSubtreeRange(struct node *node, int minKey, int maxKey, int *count) { //helper function to count no of subtrees within range
+    if (node) {
+        bool left = (node->left) ? countSubtreeRange(node->left, minKey, maxKey, count) : true;
+        bool right = (node->right) ? countSubtreeRange(node->right, minKey, maxKey, count) : true;
+        if (left && right && node->data >= minKey && node->data <= maxKey) {
+            (*count)++;
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return true;
+    }
+}
+
+int countSubtreeRange(struct node* node, int minKey=INT_MIN, int maxKey=INT_MAX) { //count subtrees within range
+    int count = 0;
+    countSubtreeRange(node, minKey, maxKey, &count);
+    return count;
+}
+
 struct node *lowestCommonAncestor(struct node* node, int key1, int key2) { //find the lowest common ancestor node
     while (node != NULL) {
         if (node->data > key1 && node->data > key2) //if both key1 and key2 are smaller than node, then LCA lies in left
@@ -284,6 +318,8 @@ int main() {
     inorderPreSuc(t, t->right, &p, &s), cout<<"For 75", (p)?cout<<" Pre :"<<p->data:cout<<"NA", (s)?cout<<" Suc :"<<s->data:cout<<"NA", cout<<endl;
     inorderPreSuc(t, t->left->right->right, &p, &s), cout<<"For 45", (p)?cout<<" Pre :"<<p->data:cout<<"NA", (s)?cout<<" Suc :"<<s->data:cout<<"NA", cout<<endl;
     inorderPreSuc(t, t->right->left->left, &p, &s), cout<<"For 55", (p)?cout<<" Pre :"<<p->data:cout<<"NA", (s)?cout<<" Suc :"<<s->data:cout<<"NA", cout<<endl;
+    cout<<"No of nodes within [5,45] : "<<countNodeRange(t, 5, 45)<<endl;
+    cout<<"No of subtrees within [5,45] : "<<countSubtreeRange(t, 5, 45)<<endl;
     cout<<"Lowest Common Ancestor of 5 & 45 :", temp = lowestCommonAncestor(t, 5, 45), (temp)?cout<<temp->data:"NA", cout<<endl;
     cout<<"Deleting 45", t = deleteNode(t, 45), cout<<" Tree:", printTree(t), cout<<endl;
     cout<<"Deleting 55", t = deleteNode(t, 55), cout<<" Tree:", printTree(t), cout<<endl;
