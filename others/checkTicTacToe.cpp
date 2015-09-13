@@ -1,4 +1,4 @@
-//to check whether a given tic tac toeoard is valid or not
+//to check whether a given tic tac toe board is valid or not
 #include <iostream>
 using namespace std;
 
