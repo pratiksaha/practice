@@ -1286,7 +1286,7 @@ int main() {
     cout<<"After deletion of original tree ", levelOrder(t);
     struct node *r = NULL;
     int pos = 0;
-    deserialize(&r, result, &pos);;
+    deserialize(&r, result, &pos);
     cout<<"After reconstruction of tree from serialized data ",levelOrder(r);
     deleteTree(&r);
     cout<<"Serialized Data :";

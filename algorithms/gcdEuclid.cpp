@@ -31,6 +31,20 @@ int Euclid(int m, int n) {//gcd of -ve nos is same as that of +ve nos
     return m;
 }
 
+int gcdOpt(int a, int b) {
+    if (b == 0 || a == b)
+        return a;
+    if (a == 0)
+        return b;
+    if ( (a & 1) == 0 && (b & 1) == 0 )
+        return gcdOpt(a>>1, b>>1) << 1;
+    if ( (a & 1) == 0 && (b & 1) != 0 )
+        return gcdOpt(a>>1, b);
+    if ( (a & 1) != 0 && (b & 1) == 0 )
+        return gcdOpt(a, b>>1);
+    return (a > b)? gcdOpt(a-b, b): gcdOpt(a, b-a);
+}
+
 int gcdExtended(int a, int b, int *x, int *y) { //ax + by = gcd(a, b)
     if (a == 0) {
         *x = 0;
@@ -57,6 +71,7 @@ int main() {
         cout<<abs(a*b)/gcd;
     }
     cout<<endl;
+    cout<<"For "<<a<<" & "<<b<<" gcd by optimzation is "<<gcdOpt(a,b)<<endl;
     int x, y;
     int m = 35, n = 15;
     int g = gcdExtended(m, n, &x, &y);
