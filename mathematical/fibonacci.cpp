@@ -63,6 +63,19 @@ long int fibo(long int n)
     return F[0][0];
 }
 
+int countFib(int low, int high) {
+    int f1 = 0, f2 = 1, f3 = 1;
+    int result = 0;
+    while (f1 <= high) {
+        if (f1 >= low)
+            result++;
+        f1 = f2;
+        f2 = f3;
+        f3 = f1 + f2;
+    }
+    return result;
+}
+
 int main(){
     int x;
     x = 6765;
@@ -73,5 +86,7 @@ int main(){
     cout<<x<<"th fibonacci no is "<<fib(x)<<endl;
     x = 21;
     cout<<x<<"th fibonacci no is "<<fibo(x)<<endl;
+    int low = 10, high = 100;
+    cout<<"No of fibonacci nos between "<<low<<" & "<<high<<" = "<<countFib(low, high)<<endl;
     return 0;
 }

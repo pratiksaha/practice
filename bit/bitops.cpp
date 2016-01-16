@@ -1,4 +1,5 @@
 #include<iostream>
+#include<cstring>
 using namespace std;
 #define INT_BITS 32
 
@@ -88,6 +89,14 @@ int turnOffK(int n, int k) { //turn off kth bit in n
         return (n & ~(1 << (k - 1)));
 }
 
+void swap(int &x, int &y) {
+    (x ^= y), (y ^= x), (x ^= y);
+}
+
+void concatenate(int arr1[], int arr2[], int m, int n) {
+    memcpy(arr1+m, arr2, sizeof(arr2));
+}
+
 int main(){
     cout<<"Swapping bits 0 and 3 in 28 is "<<swapBits(28,0,3,2)<<endl;
     cout<<"Left rotate of 16 by 2 is "<<leftRotate(16,2)<<endl;
@@ -99,5 +108,16 @@ int main(){
     cout<<"11-6 = "<<subtract(11, 6)<<endl;
     cout<<"7n/8 when n is 16 = "<<multiplyBySevenByEight(16)<<endl;
     cout<<"Turning off 4th bit in 15 = "<<turnOffK(15, 4)<<endl;
+    int a = 10, b = 20;
+    cout<<"Before Swapping : "<<a<<","<<b<<endl;
+    swap(a, b);
+    cout<<"After Swapping : "<<a<<","<<b<<endl;
+    int arr1[5] = {1, 2, 3};
+    int arr2[]  = {4, 5};
+    concatenate(arr1, arr2, 3, 2);
+    cout<"Concatenation :";
+    for (int i=0; i<5; i++)
+        cout<<" "<<*(arr1+i);
+    cout<<endl;
     return 0;
 }
