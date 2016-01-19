@@ -291,6 +291,45 @@ void printList(struct SLL *head) {
     cout<<endl;
 }
 
+void partition3way(int a[], int l, int r, int &i, int &j) {
+    i = l-1, j = r;
+    int p = l-1, q = r;
+    int v = a[r];
+    while (true) {
+        while (a[++i] < v); //find the first element greater than or equal to v from left
+        while (v < a[--j]) //find the first element smaller than or equal to v from right
+            if (j == l)
+                break;
+        if (i >= j) //we are done if i and j cross
+            break;
+        swap(a[i], a[j]); //smaller goes on left greater goes on right
+        if (a[i] == v) { //move all same left occurrence of pivot to beginning of array and keep count using p
+            p++;
+            swap(a[p], a[i]);
+        }
+        if (a[j] == v) { //move all same right occurrence of pivot to end of array and keep count using q
+            q--;
+            swap(a[j], a[q]);
+        }
+    }
+    swap(a[i], a[r]); //move pivot element to its correct index
+    j = i-1;
+    for (int k = l; k < p; k++, j--)
+        swap(a[k], a[j]); //move all left same occurrences from beginning to adjacent to arr[i]
+    i = i+1;
+    for (int k = r-1; k > q; k--, i++)
+        swap(a[i], a[k]); //move all right same occurrences from end to adjacent to arr[i]
+}
+
+void quickSort3way(int a[], int l, int r) {
+    if (r>l) {
+        int i, j;
+        partition3way(a, l, r, i, j);
+        quickSort3way(a, l, j);
+        quickSort3way(a, i, r);
+    }
+}
+
 int main() {
     int a1[] = {10, 7, 8, 9, 1, 5};
     int n1 = sizeof(a1)/sizeof(a1[0]);
@@ -348,6 +387,13 @@ int main() {
     printArray(a5, n5);
     quickSortNLogN(a5, 0, n5-1);
     cout<<"Sorted Array :";
-    printArray(a4, n4);
+    printArray(a5, n5);
+    int a6[] = {10, 7, 8, 9, 1, 5};
+    int n6 = sizeof(a6)/sizeof(a6[0]);
+    cout<<"Input Array :";
+    printArray(a6, n6);
+    quickSort3way(a6, 0, n6-1);
+    cout<<"Sorted Array :";
+    printArray(a6, n6);
     return 0;
 }
