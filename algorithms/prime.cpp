@@ -79,7 +79,7 @@ void segmentedSieve(int n) {
     cout<<endl;
 }
 
-int sundaramSieve(int n) {
+void sundaramSieve(int n) {
     int nNew = (n-2)/2;
     bool marked[nNew + 1];
     memset(marked, false, sizeof(marked));
@@ -91,6 +91,37 @@ int sundaramSieve(int n) {
     for (int i=1; i<=nNew; i++)
         if (marked[i] == false)
             cout<<" "<<2*i+1;
+    cout<<endl;
+}
+
+int atkinSieve(int limit) {
+    if (limit > 2)
+        cout<<" "<<2;
+    if (limit > 3)
+        cout<<" "<<3;
+    bool sieve[limit];
+    for (int i=0; i<limit; i++)
+        sieve[i] = false;
+    for (int x=1; x*x<limit; x++) {
+        for (int y = 1; y*y < limit; y++) {
+            int n = (4*x*x)+(y*y);
+            if (n <= limit && (n % 12 == 1 || n % 12 == 5))
+                sieve[n] ^= true;
+            n = (3*x*x)+(y*y);
+            if (n <= limit && n % 12 == 7)
+                sieve[n] ^= true;
+            n = (3*x*x)-(y*y);
+            if (x > y && n <= limit && n % 12 == 11)
+                sieve[n] ^= true;
+        }
+    }
+    for (int r=5; r*r<limit; r++)
+        if (sieve[r])
+            for (int i=r*r; i<limit; i+=r*r)
+                sieve[i] = false;
+    for (int a=5; a<limit; a++)
+        if (sieve[a])
+            cout<<" "<<a;
     cout<<endl;
 }
 
@@ -138,6 +169,8 @@ int main() {
     segmentedSieve(n);
     cout<<"Primes Smaller than "<<n<<" :";
     sundaramSieve(n);
+    cout<<"Primes Smaller than "<<n<<" :";
+    atkinSieve(n);
     k = 4;
     cout<<"All primes smaller than "<<n<<" :";
     for (int i=1; i<n; i++)

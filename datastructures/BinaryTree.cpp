@@ -1171,6 +1171,90 @@ void deserialize(struct node **node, vector<int> res, int *pos=0) {
     }
 }
 
+bool isMirror(struct node *root1, struct node *root2) { //check if two trees are mirror
+    if (root1 == NULL && root2 == NULL)
+        return true;
+    if (root1 && root2 && root1->data == root2->data)
+        return isMirror(root1->left, root2->right) && isMirror(root1->right, root2->left);
+    return false;
+}
+
+bool isSymmetric(struct node* root) { //check if tree is mirror of itself
+    return isMirror(root, root);
+}
+
+void findLeafDown(struct node *root, int lev, int *minDist) { //find closest leaf below
+    if (root) {
+        if (root->left == NULL && root->right == NULL) { //check if this node is closer than the closest so far if this is a leaf node
+            if (lev < (*minDist))
+                *minDist = lev;
+            return;
+        }
+        findLeafDown(root->left, lev+1, minDist);
+        findLeafDown(root->right, lev+1, minDist);
+    }
+}
+
+int findLeafParent(struct node *root, struct node *x, int *minDist) { //find closest leaf through parent
+    if (root == NULL) {
+        return -1;
+    } else if (root == x) {
+        return 0;
+    } else {
+        int l = findLeafParent(root->left, x,  minDist);
+        if (l != -1) {
+            findLeafDown(root->right, l+2, minDist); //find closest leaf in right subtree if left subtree has x
+            return l+1;
+        }
+        int r = findLeafParent(root->right, x, minDist);
+        if (r != -1) {
+            findLeafDown(root->left, r+2, minDist); //find closest leaf in left subtree if right subtree has x
+            return r+1;
+        }
+        return -1;
+    }
+}
+
+int distClosestLeaf(struct node *root, struct node *x) { //find closest leaf to the given node x in a tree
+    int minDist = INT_MAX;
+    findLeafDown(x, 0, &minDist);
+    findLeafParent(root, x, &minDist);
+    return minDist;
+}
+
+int minDepth(struct node *root) { //find minimum depth of binary Tree
+    if (root) {
+        struct qItem {
+            struct node *node;
+            int depth;
+        };
+        queue<qItem> q;
+        qItem qi = {root, 1};
+        q.push(qi);
+        while (q.empty() == false) {
+            qi = q.front();
+            q.pop();
+            struct node *node = qi.node;
+            int depth = qi.depth;
+            if (node->left == NULL && node->right == NULL) //if this  is the first leaf node seen so far
+                return depth;
+            if (node->left != NULL) {
+                qi.node  = node->left;
+                qi.depth = depth + 1;
+                q.push(qi);
+            }
+            if (node->right != NULL) {
+                qi.node  = node->right;
+                qi.depth = depth+1;
+                q.push(qi);
+            }
+        }
+        return 0;
+    } else {
+        return 0;
+    }
+}
+
 int main() {
     struct node *t = NULL;
     createTree(&t);
@@ -1282,6 +1366,10 @@ int main() {
     postorderMorris(t);
     vector<int> result;
     serialize(t, &result);
+    cout<<"Tree"<<(isSymmetric(t)?" is ":" is not ")<<"symmetric\n";
+    struct node *k = t->right;
+    cout<<"Closest leaf to "<<k->data<<" is at a distance "<<distClosestLeaf(t, k)<<endl;
+    cout<<"Minimum depth of the tree is "<<minDepth(t)<<endl;
     deleteTree(&t);
     cout<<"After deletion of original tree ", levelOrder(t);
     struct node *r = NULL;
