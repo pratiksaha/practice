@@ -32,6 +32,18 @@ int mergeSortedArrays(int mPlusN[], int N[], int m, int n) {
     }
 }
 
+void merge(int ar1[], int ar2[], int m, int n) {
+    for (int i=n-1; i>=0; i--) {
+        int j, last = ar1[m-1];
+        for (j=m-1; j >= 0 && ar1[j] > ar2[i]; j--) //find the smallest element greater than ar2[i]
+            ar1[j+1] = ar1[j]; //move all elems one pos ahead till the smallest greater elem is not found
+        if (j != m-1) { //if there was a greater element
+            ar1[j+1] = ar2[i];
+            ar2[i] = last;
+        }
+    }
+}
+
 void printArray(int arr[], int size) {
     for (int i=0; i<size; i++)
         cout<<" "<<arr[i];
@@ -47,5 +59,15 @@ int main() {
     mergeSortedArrays(mPlusN, N, m, n);
     cout<<"Merged Array :";
     printArray(mPlusN, m+n);
+    int ar1[] = {1, 5, 9, 10, 15, 20};
+    int ar2[] = {2, 3, 8, 13};
+    m = sizeof(ar1)/sizeof(ar1[0]);
+    n = sizeof(ar2)/sizeof(ar2[0]);
+    merge(ar1, ar2, m, n);
+    cout<<"After Merging\n";
+    cout<<"First Array :";
+    printArray(ar1, m);
+    cout<<"Second Array :";
+    printArray(ar2, n);
     return 0;
 }
