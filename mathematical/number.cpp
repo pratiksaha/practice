@@ -119,6 +119,19 @@ string all1mulofend3(int n) { //find the least multiple with all 1s for a n endi
     return res;
 }
 
+int gcd(int a,int b) {
+    if (b==0)
+        return a;
+    return gcd(b,a%b);
+}
+
+void smallestAxBy(int a, int b) { //smallest values of x and y that satisfy ax=by
+    int g = gcd(a, b);
+    int lcm = (a*b)/g;
+    cout<<"x = "<<lcm/a<<" y = "<<lcm/b<<endl;
+    cout<<"x = "<<b/g<<" y = "<<a/g<<endl;
+}
+
 int main() {
     int m = 5, k = 3;
     printSequence(m, k);
@@ -133,5 +146,7 @@ int main() {
     int n = 43;
     squares(n);
     cout<<"Least multiple with all 1s for "<<n<<" : "<<all1mulofend3(n)<<endl;
+    int p = 25, q = 35;
+    smallestAxBy(p,q);
     return 0;
 }
