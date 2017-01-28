@@ -1,6 +1,7 @@
 #include<iostream>
 #include<cmath>
 using namespace std;
+#define MAX 1000
 
 //Check if a no is perfect square
 bool isPerfectSquare(long int n){
@@ -76,6 +77,41 @@ int countFib(int low, int high) {
     return result;
 }
 
+long int sumFibonacci(int n) {
+    return fib(n+2) - 1;
+}
+
+long int evenFibonacci(int n) {
+    if (n < 1)
+       return n;
+    if (n == 1)
+       return 2;
+    return ((4*evenFibonacci(n-1)) + evenFibonacci(n-2));
+}
+
+int findPosFibSeries(int k, int n) {
+    unsigned long long int f1 = 0, f2 = 1, f3;
+    for (int i = 2; i <= MAX; i++) {
+        f3 = f1 + f2;
+        f1 = f2;
+        f2 = f3;
+        if (f2%k==0) //first multiple of k at position i
+           return n*i; //n'th multiple would be at position n*i using periodic property of fibonacci numbers under modulo
+    }
+}
+
+int nonFibonacci(int n) {
+    int prevPrev=1, prev=2, curr=3;
+    while (n > 0) {
+        prevPrev = prev;
+        prev = curr;
+        curr = prevPrev + prev;
+        n = n - (curr - prev - 1);
+    }
+    n = n + (curr - prev - 1);
+    return prev + n;
+}
+
 int main(){
     int x;
     x = 6765;
@@ -88,5 +124,9 @@ int main(){
     cout<<x<<"th fibonacci no is "<<fibo(x)<<endl;
     int low = 10, high = 100;
     cout<<"No of fibonacci nos between "<<low<<" & "<<high<<" = "<<countFib(low, high)<<endl;
+    cout<<"Sum of first 4 fibonacci nos is "<<sumFibonacci(4)<<endl;
+    cout<<"7th even fibonacci no is "<<evenFibonacci(7)<<endl;
+    cout<<"Position of 5th multiple of 4 in fibonacci series is "<<findPosFibSeries(4, 5)<<endl;
+    cout<<"5th non fibonacci no is "<<nonFibonacci(5)<<endl;
     return 0;
 }
