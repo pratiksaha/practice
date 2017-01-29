@@ -97,6 +97,40 @@ void concatenate(int arr1[], int arr2[], int m, int n) {
     memcpy(arr1+m, arr2, sizeof(arr2));
 }
 
+bool isEven(int n) {
+    return (!(n&1));
+}
+
+int multiplyBySeven(int n) {
+    return (n << 3) - n;
+}
+
+int multiplyByTen(int n) {
+    return (n<<1) + (n<<3);
+}
+
+int multiplyByTwelve(int n) {
+    return (n << 3) + (n << 2);
+}
+
+string twosComplement(string str) {
+    int n = str.length();
+    int i;
+    for (i=n; i>=0; i--)
+        if (str[i] == '1')
+            break;
+    if (i == 0)
+        return '1' + str;
+    for (int k = i-1 ; k >= 0; k--) {
+        if (str[k] == '1')
+            str[k] = '0';
+        else
+            str[k] = '1';
+    }                     
+    return str;
+}
+
+
 int main(){
     cout<<"Swapping bits 0 and 3 in 28 is "<<swapBits(28,0,3,2)<<endl;
     cout<<"Left rotate of 16 by 2 is "<<leftRotate(16,2)<<endl;
@@ -119,5 +153,12 @@ int main(){
     for (int i=0; i<5; i++)
         cout<<" "<<*(arr1+i);
     cout<<endl;
+    cout<<"5*7 = "<<multiplyBySeven(5)<<endl;
+    cout<<"5*10 = "<<multiplyByTen(5)<<endl;
+    cout<<"5*12 = "<<multiplyByTwelve(5)<<endl;
+    cout<<"11 is "<<(isEven(11)? "even" : "odd")<<endl;
+    cout<<"12 is "<<(isEven(12)? "even" : "odd")<<endl;
+    string str = "00000101";
+    cout<<"Two's complement of "<<str<<" is "<<twosComplement(str)<<endl;
     return 0;
 }
