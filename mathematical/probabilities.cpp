@@ -66,6 +66,14 @@ int unbiasedCoinFromBiasedCoin() { //make a fair coin using biasedCoin
     return unbiasedCoinFromBiasedCoin();
 } 
 
+int rand50() {
+    return rand() & 1;
+}
+
+bool rand75() {
+    return rand50() | rand50();
+}
+
 int main() {
     srand (time(NULL));
     int arr[]  = {1, 2, 3, 4};
@@ -95,5 +103,7 @@ int main() {
     for (int i=0; i<N; i++)
         cout<<" "<<unbiasedCoinFromBiasedCoin();
     cout<<endl;
+    for(int i = 0; i < 50; i++)
+        cout<<i<<"th try : "<<rand75()<<endl;
     return 0;
 }
